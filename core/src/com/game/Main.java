@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Main extends ApplicationAdapter {
 
-	private Screen screen;
+	private static Screen screen;
 	
 	@Override
 	public void create () {
@@ -28,7 +28,7 @@ public class Main extends ApplicationAdapter {
 
 	}
 
-	private void setCurrentScreen(String newScreen) {
+	public static void setCurrentScreen(String newScreen) {
 		screen.dispose();
 		switch (newScreen) {
 			case "home":

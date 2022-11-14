@@ -1,19 +1,18 @@
 package com.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class HomeScreen extends Screen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private Texture img;
     private BitmapFont font;
+    private ShapeRenderer shapeRenderer;
 
     public void create() {
         img = new Texture("sprites/Water.png");
@@ -22,6 +21,7 @@ public class HomeScreen extends Screen {
         camera.setToOrtho(false, 800, 480);
         batch = new SpriteBatch();
         font = new BitmapFont();
+        shapeRenderer = new ShapeRenderer();
     }
 
     public void render() {
@@ -36,15 +36,13 @@ public class HomeScreen extends Screen {
             }
         }
 
-        System.out.println(Gdx.graphics.getWidth()/2);
-        System.out.println(Gdx.input.getX());
-        font.draw(batch, "Click play to start", 540, 360);
-
-//        if (Gdx.input.isTouched()) {
-//            Vector3 touchPos = new Vector3();
-//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-//            camera.unproject(touchPos);
-//        }
+        if (Gdx.input.isTouched() &&
+                Gdx.input.getX() < 600 &&
+        Gdx.input.getX() > 460 &&
+        Gdx.input.getY() < 390 &&
+        Gdx.input.getY() > 340) {
+            Main.setCurrentScreen("game");
+        }
 
 //        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
 //            bucket.x -= 200 * Gdx.graphics.getDeltaTime();
@@ -57,11 +55,21 @@ public class HomeScreen extends Screen {
 
 
         batch.end();
+
+        shapeRenderer.setColor(0, 0, 0.4f, 1);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.rect(460, 340, 140, 50);
+        shapeRenderer.end();
+
+        batch.begin();
+        font.draw(batch, "Click to start", 350, 250);
+        batch.end();
     }
 
     public void dispose() {
         batch.dispose();
         img.dispose();
         font.dispose();
+        shapeRenderer.dispose();
     }
 }
