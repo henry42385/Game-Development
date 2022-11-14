@@ -18,7 +18,7 @@ public class HomeScreen extends Screen {
         img = new Texture("sprites/Water.png");
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, 1080, 720);
         batch = new SpriteBatch();
         font = new BitmapFont();
         shapeRenderer = new ShapeRenderer();
@@ -37,10 +37,10 @@ public class HomeScreen extends Screen {
         }
 
         if (Gdx.input.isTouched() &&
-                Gdx.input.getX() < 600 &&
-        Gdx.input.getX() > 460 &&
-        Gdx.input.getY() < 390 &&
-        Gdx.input.getY() > 340) {
+                Gdx.input.getX() < 640 &&
+        Gdx.input.getX() > 510 &&
+        Gdx.input.getY() < 380 &&
+        Gdx.input.getY() > 330) {
             Main.setCurrentScreen("game");
         }
 
@@ -58,11 +58,11 @@ public class HomeScreen extends Screen {
 
         shapeRenderer.setColor(0, 0, 0.4f, 1);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(460, 340, 140, 50);
+        shapeRenderer.rect(510, 330, 130, 50);
         shapeRenderer.end();
 
         batch.begin();
-        font.draw(batch, "Click to start", 350, 250);
+        font.draw(batch, "Click to start", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         batch.end();
     }
 
