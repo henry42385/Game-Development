@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -13,6 +14,7 @@ public class HomeScreen extends Screen {
     private SpriteBatch batch;
     private Texture img;
     private Rectangle bucket;
+    private BitmapFont font;
 
     public void create() {
         img = new Texture("sprites/Water.png");
@@ -26,6 +28,7 @@ public class HomeScreen extends Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         batch = new SpriteBatch();
+        font = new BitmapFont();
     }
 
     public void render() {
@@ -50,6 +53,8 @@ public class HomeScreen extends Screen {
         if (bucket.x < 0) bucket.x = 0;
         if (bucket.x > 800 - 64) bucket.x = 800 - 64;
 
+
+        font.draw(batch, "Click play to start", 200, 200);
         batch.end();
     }
 
