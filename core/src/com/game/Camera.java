@@ -20,27 +20,27 @@ public class Camera {
     }
 
     public static void moveLeft() {
-        get().translate(-50 * Gdx.graphics.getDeltaTime(), 0, 0);
+        get().translate(-100 * Gdx.graphics.getDeltaTime(), 0, 0);
     }
 
     public static void moveRight() {
-        get().translate(50 * Gdx.graphics.getDeltaTime(), 0, 0);
+        get().translate(100 * Gdx.graphics.getDeltaTime(), 0, 0);
     }
 
     public static void moveUp() {
-        get().translate(0, 50 * Gdx.graphics.getDeltaTime(), 0);
+        get().translate(0, 100 * Gdx.graphics.getDeltaTime(), 0);
     }
 
     public static void moveDown() {
-        get().translate(0, -50 * Gdx.graphics.getDeltaTime(), 0);
+        get().translate(0, -100 * Gdx.graphics.getDeltaTime(), 0);
     }
 
     public static void zoomOut() {
-        get().setToOrtho(false, get().viewportWidth * 1.01f, get().viewportHeight * 1.01f);
+        get().zoom = get().zoom * 1.01f;
     }
 
     public static void zoomIn() {
-        get().setToOrtho(false, get().viewportWidth * 0.99f, get().viewportHeight * 0.99f);
+        get().zoom = get().zoom * 0.99f;
     }
 
     public static void reset() {
