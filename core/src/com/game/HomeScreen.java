@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class HomeScreen extends Screen {
-    private OrthographicCamera camera;
     private SpriteBatch batch;
     private Texture img;
     private BitmapFont font;
@@ -16,17 +15,14 @@ public class HomeScreen extends Screen {
 
     public void create() {
         img = new Texture("sprites/Water.png");
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1080, 720);
         batch = new SpriteBatch();
         font = new BitmapFont();
         shapeRenderer = new ShapeRenderer();
     }
 
     public void render() {
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
+        Camera.update();
+        batch.setProjectionMatrix(Camera.get().combined);
         batch.begin();
 
         for (int i = 0; i < Gdx.graphics.getWidth(); i += 128) {
