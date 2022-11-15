@@ -20,19 +20,19 @@ public class DynamicCamera {
     }
 
     public static void moveLeft() {
-        get().translate(-100 * Gdx.graphics.getDeltaTime(), 0, 0);
+        get().translate(-500 * Gdx.graphics.getDeltaTime(), 0, 0);
     }
 
     public static void moveRight() {
-        get().translate(100 * Gdx.graphics.getDeltaTime(), 0, 0);
+        get().translate(500 * Gdx.graphics.getDeltaTime(), 0, 0);
     }
 
     public static void moveUp() {
-        get().translate(0, 100 * Gdx.graphics.getDeltaTime(), 0);
+        get().translate(0, 500 * Gdx.graphics.getDeltaTime(), 0);
     }
 
     public static void moveDown() {
-        get().translate(0, -100 * Gdx.graphics.getDeltaTime(), 0);
+        get().translate(0, -500 * Gdx.graphics.getDeltaTime(), 0);
     }
 
     public static void zoomOut() {

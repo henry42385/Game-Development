@@ -12,12 +12,14 @@ public class GameScreen extends Screen {
     private Texture cloud;
     private SpriteBatch batchStatic;
     private SpriteBatch batchDynamic;
+    private Map map;
 
     public void create() {
         spriteSheet = new Texture("sprites/TerrainSpritesheetOld.png");
-        cloud = new Texture("sprites/Cloud.png");
+        cloud = new Texture("sprites/MissileShip.png");
         batchStatic = new SpriteBatch();
         batchDynamic = new SpriteBatch();
+        map = new Map("assets/maps/map1.txt");
     }
 
     public void render() {
@@ -26,13 +28,22 @@ public class GameScreen extends Screen {
         batchDynamic.begin();
 
         Vector3 mouseLocation = StaticCamera.get().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        System.out.println("camera: " + mouseLocation.y);
-        System.out.println("world: " + Gdx.input.getY());
 
-        batchDynamic.draw(spriteSheet, 100, 100, 200, 200, 0.5f, 0.5f, 1, 0);
-        batchDynamic.draw(spriteSheet, 300, 300, 200, 200, 0, 1, 0.5f, 0.5f);
-        batchDynamic.draw(spriteSheet, 500, 500, 200, 200, 0.5f, 1, 1, 0.5f);
-        batchDynamic.draw(spriteSheet, 700, 300, 200, 200, 0, 0.5f, 0.5f, 0);
+        char[][] drawMap = map.getMap();
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                System.out.println("draw");
+                if (drawMap[y][x] == 'D')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 0.5f, 0.5f, 0);
+                else if (drawMap[y][x] == 'S')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 0.5f, 1, 0);
+                else if (drawMap[y][x] == 'L')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 1, 0.5f, 0.5f);
+                else if (drawMap[y][x] == 'M')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 1, 1, 0.5f);
+            }
+        }
+
         batchDynamic.end();
 
         StaticCamera.update();
