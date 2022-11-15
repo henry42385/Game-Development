@@ -1,11 +1,11 @@
 package com.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 
 public class HomeScreen extends Screen {
     private SpriteBatch batch;
@@ -21,44 +21,30 @@ public class HomeScreen extends Screen {
     }
 
     public void render() {
-        Camera.update();
-        batch.setProjectionMatrix(Camera.get().combined);
         batch.begin();
-
         for (int i = 0; i < Gdx.graphics.getWidth(); i += 128) {
             for (int j = 0; j < Gdx.graphics.getHeight(); j += 128) {
                 batch.draw(img, i, j, 128, 128);
             }
         }
-
-
-
-//        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-//            bucket.x -= 200 * Gdx.graphics.getDeltaTime();
-//        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-//            bucket.x += 200 * Gdx.graphics.getDeltaTime();
-//
-//        if (bucket.x < 0) bucket.x = 0;
-//        if (bucket.x > 800 - 64) bucket.x = 800 - 64;
-
-
-
         batch.end();
 
         shapeRenderer.setColor(0, 0, 0.4f, 1);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(510, 330, 130, 50);
+        shapeRenderer.rect((StaticCamera.get().viewportWidth - 50) / 2, (StaticCamera.get().viewportHeight - 80) / 2, 130, 50);
         shapeRenderer.end();
 
         batch.begin();
-        font.draw(batch, "Click to start", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        font.draw(batch, "Click to start", StaticCamera.get().viewportWidth / 2, StaticCamera.get().viewportHeight / 2);
         batch.end();
 
+        Vector3 mouseLocation = StaticCamera.get().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+
         if (Gdx.input.isTouched() &&
-                Gdx.input.getX() < 640 &&
-                Gdx.input.getX() > 510 &&
-                Gdx.input.getY() < 380 &&
-                Gdx.input.getY() > 330) {
+                mouseLocation.x < StaticCamera.get().viewportWidth / 2 + 200 &&
+                mouseLocation.x > StaticCamera.get().viewportWidth / 2 - 200 &&
+                mouseLocation.y < StaticCamera.get().viewportHeight / 2 + 200 &&
+                mouseLocation.y > StaticCamera.get().viewportHeight / 2 - 200) {
             Main.setCurrentScreen("game");
         }
     }

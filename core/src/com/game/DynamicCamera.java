@@ -3,15 +3,15 @@ package com.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class Camera {
+public class DynamicCamera {
     private static OrthographicCamera camera;
     private int width = 1080;
     private int height = 720;
 
     public static OrthographicCamera get() {
-        if (Camera.camera == null) {
+        if (DynamicCamera.camera == null) {
             camera = new OrthographicCamera();
-            camera.setToOrtho(false, 1080, 720);
+            camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         } return camera;
     }
 

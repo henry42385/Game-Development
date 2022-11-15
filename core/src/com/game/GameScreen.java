@@ -2,48 +2,64 @@ package com.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen extends Screen {
     private Texture spriteSheet;
-    private SpriteBatch batch;
+    private Texture cloud;
+    private SpriteBatch batchStatic;
+    private SpriteBatch batchDynamic;
 
     public void create() {
         spriteSheet = new Texture("sprites/TerrainSpritesheetOld.png");
-        batch = new SpriteBatch();
+        cloud = new Texture("sprites/Cloud.png");
+        batchStatic = new SpriteBatch();
+        batchDynamic = new SpriteBatch();
     }
 
     public void render() {
-        Camera.update();
-        batch.setProjectionMatrix(Camera.get().combined);
-        batch.begin();
-        batch.draw(spriteSheet, 100, 100, 132, 132, 0.5f, 0.5f, 1, 0);
-        batch.draw(spriteSheet, 300, 300, 132, 132, 0, 1, 0.5f, 0.5f);
-        batch.draw(spriteSheet, 500, 500, 132, 132, 0.5f, 1, 1, 0.5f);
-        batch.draw(spriteSheet, 700, 300, 132, 132, 0, 0.5f, 0.5f, 0);
-        batch.end();
+        DynamicCamera.update();
+        batchDynamic.setProjectionMatrix(DynamicCamera.get().combined);
+        batchDynamic.begin();
+
+        Vector3 mouseLocation = StaticCamera.get().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        System.out.println("camera: " + mouseLocation.y);
+        System.out.println("world: " + Gdx.input.getY());
+
+        batchDynamic.draw(spriteSheet, 100, 100, 200, 200, 0.5f, 0.5f, 1, 0);
+        batchDynamic.draw(spriteSheet, 300, 300, 200, 200, 0, 1, 0.5f, 0.5f);
+        batchDynamic.draw(spriteSheet, 500, 500, 200, 200, 0.5f, 1, 1, 0.5f);
+        batchDynamic.draw(spriteSheet, 700, 300, 200, 200, 0, 0.5f, 0.5f, 0);
+        batchDynamic.end();
+
+        StaticCamera.update();
+        batchStatic.begin();
+        batchStatic.draw(cloud, 450, 450, 200, 200);
+        batchStatic.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            Camera.moveLeft();
+            DynamicCamera.moveLeft();
         } if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            Camera.moveRight();
+            DynamicCamera.moveRight();
         } if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            Camera.moveUp();
+            DynamicCamera.moveUp();
         } if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            Camera.moveDown();
+            DynamicCamera.moveDown();
         } if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            Camera.zoomOut();
+            DynamicCamera.zoomOut();
         } if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            Camera.zoomIn();
+            DynamicCamera.zoomIn();
         } if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            Camera.reset();
+            StaticCamera.reset();
         }
     }
 
     public void dispose() {
         spriteSheet.dispose();
-        batch.dispose();
+        batchDynamic.dispose();
+        batchStatic.dispose();
     }
 }
