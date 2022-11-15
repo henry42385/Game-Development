@@ -26,7 +26,6 @@ public class HomeScreen extends Screen {
 
     public void render() {
         camera.update();
-//				camera.translate(-0.08f, 0, 0);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
@@ -36,13 +35,7 @@ public class HomeScreen extends Screen {
             }
         }
 
-        if (Gdx.input.isTouched() &&
-                Gdx.input.getX() < 640 &&
-        Gdx.input.getX() > 510 &&
-        Gdx.input.getY() < 380 &&
-        Gdx.input.getY() > 330) {
-            Main.setCurrentScreen("game");
-        }
+
 
 //        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
 //            bucket.x -= 200 * Gdx.graphics.getDeltaTime();
@@ -64,6 +57,14 @@ public class HomeScreen extends Screen {
         batch.begin();
         font.draw(batch, "Click to start", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         batch.end();
+
+        if (Gdx.input.isTouched() &&
+                Gdx.input.getX() < 640 &&
+                Gdx.input.getX() > 510 &&
+                Gdx.input.getY() < 380 &&
+                Gdx.input.getY() > 330) {
+            Main.setCurrentScreen("game");
+        }
     }
 
     public void dispose() {

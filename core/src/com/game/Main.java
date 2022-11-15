@@ -25,7 +25,7 @@ public class Main extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-
+		screen.dispose();
 	}
 
 	public static void setCurrentScreen(String newScreen) {
@@ -36,7 +36,6 @@ public class Main extends ApplicationAdapter {
 				break;
 			case "game":
 				screen = new GameScreen();
-
 		}
 		screen.create();
 	}
