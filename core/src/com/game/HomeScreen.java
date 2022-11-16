@@ -1,6 +1,9 @@
 package com.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +24,8 @@ public class HomeScreen extends Screen {
     }
 
     public void render() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         for (int i = 0; i < Gdx.graphics.getWidth(); i += 128) {
             for (int j = 0; j < Gdx.graphics.getHeight(); j += 128) {
@@ -35,7 +40,7 @@ public class HomeScreen extends Screen {
         shapeRenderer.end();
 
         batch.begin();
-        font.draw(batch, "Click to start", StaticCamera.get().viewportWidth / 2, StaticCamera.get().viewportHeight / 2);
+        font.draw(batch, "Pass & Play", StaticCamera.get().viewportWidth / 2, StaticCamera.get().viewportHeight / 2);
         batch.end();
 
         Vector3 mouseLocation = StaticCamera.get().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));

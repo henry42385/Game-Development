@@ -19,8 +19,6 @@ public class Main extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
 		screen.render();
-		if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
-			setCurrentScreen("game");
 	}
 	
 	@Override
