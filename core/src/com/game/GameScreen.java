@@ -10,9 +10,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+
 public class GameScreen extends Screen {
     private Texture spriteSheet;
     private Texture target;
+    private Texture destroyer;
     private SpriteBatch batchStatic;
     private SpriteBatch batchDynamic;
     private ShapeRenderer shapeRenderer;
@@ -24,6 +27,7 @@ public class GameScreen extends Screen {
     public void create() {
         spriteSheet = new Texture("sprites/TerrainSpritesheetOld.png");
         target = new Texture("sprites/Target.png");
+        destroyer = new Texture("sprites/Destroyer.png");
         batchStatic = new SpriteBatch();
         batchDynamic = new SpriteBatch();
         map = new Map("assets/maps/map1.txt");
@@ -45,6 +49,8 @@ public class GameScreen extends Screen {
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        DynamicCamera.update();
+        batchDynamic.setProjectionMatrix(DynamicCamera.get().combined);
         mouseLocation.x = Gdx.input.getX();
         mouseLocation.y = Gdx.input.getY();
         renderWorld();
@@ -53,43 +59,16 @@ public class GameScreen extends Screen {
     }
 
     private void renderWorld() {
-        DynamicCamera.update();
-        batchDynamic.setProjectionMatrix(DynamicCamera.get().combined);
+        drawMap();
+        drawGrid();
+        drawShips();
+
         batchDynamic.begin();
-
         Vector3 worldMouseLocation = DynamicCamera.get().unproject(mouseLocation);
-//        System.out.println(worldMouseLocation.x);
-        System.out.println(worldMouseLocation.y);
-//        System.out.println((int)(worldMouseLocation.x / 128) * 128);
-
-        char[][] drawMap = map.getMap();
-        for (int y = 0; y < map.getHeight(); y++) {
-            for (int x = 0; x < map.getWidth(); x++) {
-                if (drawMap[y][x] == 'D')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 0.5f, 0.5f, 0);
-                else if (drawMap[y][x] == 'S')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 0.5f, 1, 0);
-                else if (drawMap[y][x] == 'L')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 1, 0.5f, 0.5f);
-                else if (drawMap[y][x] == 'M')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 1, 1, 0.5f);
-            }
-        }
+        if ((int)(worldMouseLocation.x / 128) >= 2 && (int)(worldMouseLocation.x / 128) < map.getWidth() -2 &&
+        (int)(worldMouseLocation.y / 128) >= 2 && (int)(worldMouseLocation.y / 128) < map.getHeight() -2)
         batchDynamic.draw(target, (int)(worldMouseLocation.x / 128) * 128 + 32, (int)(worldMouseLocation.y / 128) * 128 + 32, 64, 64);
-
         batchDynamic.end();
-
-        Gdx.gl.glLineWidth(3);
-        shapeRenderer.setProjectionMatrix(DynamicCamera.get().combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0, 0, 0, 1);
-        for (int i = 1; i < map.getHeight() - 2; i++) {
-            shapeRenderer.line(256, 128 + i * 128, map.getWidth() * 128 - 256, 128 + i * 128);
-        }
-        for (int i = 1; i < map.getWidth() - 2; i++) {
-            shapeRenderer.line(128 + i * 128, 256, 128 + i * 128, map.getHeight() * 128 - 256);
-        }
-        shapeRenderer.end();
     }
 
     private void renderHUD() {
@@ -124,6 +103,51 @@ public class GameScreen extends Screen {
         } if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             StaticCamera.reset();
         }
+    }
+
+    private void drawMap() {
+        batchDynamic.begin();
+        char[][] drawMap = map.getMap();
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                if (drawMap[y][x] == 'D')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 0.5f, 0.5f, 0);
+                else if (drawMap[y][x] == 'S')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 0.5f, 1, 0);
+                else if (drawMap[y][x] == 'L')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 1, 0.5f, 0.5f);
+                else if (drawMap[y][x] == 'M')
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 1, 1, 0.5f);
+            }
+        }
+        batchDynamic.end();
+    }
+
+    private void drawGrid() {
+        Gdx.gl.glLineWidth(3);
+        shapeRenderer.setProjectionMatrix(DynamicCamera.get().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0, 0, 0, 1);
+        for (int i = 1; i < map.getHeight() - 2; i++) {
+            shapeRenderer.line(256, 128 + i * 128, map.getWidth() * 128 - 256, 128 + i * 128);
+        }
+        for (int i = 1; i < map.getWidth() - 2; i++) {
+            shapeRenderer.line(128 + i * 128, 256, 128 + i * 128, map.getHeight() * 128 - 256);
+        }
+        shapeRenderer.end();
+    }
+
+    private void drawShips() {
+        batchDynamic.begin();
+        ArrayList<Ship> ships = map.getPlayer1Ships();
+        for (Ship ship : ships) {
+            batchDynamic.draw(destroyer, ship.getX() * 128, ship.getY() * 128, 128, 128, (float)1/8 * ship.getDirection(), 0.5f, (float)1/8 * (ship.getDirection() + 1), 0);
+        }
+        ships = map.getPlayer2Ships();
+        for (Ship ship : ships) {
+            batchDynamic.draw(destroyer, ship.getX() * 128, ship.getY() * 128, 128, 128, (float)1/8 * ship.getDirection(), 0.5f, (float)1/8 * (ship.getDirection() + 1), 0);
+        }
+        batchDynamic.end();
     }
 
     public void dispose() {
