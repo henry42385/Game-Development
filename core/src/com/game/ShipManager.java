@@ -24,7 +24,7 @@ public class ShipManager {
     public ShipManager() {
         create();
         player1Ships.add(new Destroyer(4, 4, 2));
-        player1Ships.add(new Destroyer(4, 6, 1));
+        player1Ships.add(new Destroyer(7, 8, 1));
         player2Ships.add(new Destroyer(16, 4, 6));
     }
 
@@ -33,7 +33,7 @@ public class ShipManager {
         batch = new SpriteBatch();
         destroyer = new Texture("sprites/Destroyer.png");
         target = new Texture("sprites/Target.png");
-        red = new Texture("sprites/TerrainSpritesheet2.png");
+        red = new Texture("sprites/Red.png");
     }
 
     public ArrayList<Ship> getPlayer1Ships() {
@@ -63,13 +63,13 @@ public class ShipManager {
         if (selectedShip != null) {
             if (selectedShip.getStatus().equals("move")) {
                 for (Vector2 location : selectedShip.generateMoves()) {
-                    batch.draw(red, location.x * 128, location.y * 128, 128, 128, 0, 0.5f, 0.25f, 0.25f);
+                    batch.draw(red, location.x * 128, location.y * 128, 128, 128);
                 }
             } else if (selectedShip.getStatus().equals("attack")) {
                 batch.draw(target, MouseHandler.grid.x * 128 + 32, MouseHandler.grid.y * 128 + 32, 64, 64);
                 for (int i = selectedShip.getX() - 2; i <= selectedShip.getX() + 2; i++) {
                     for (int j = selectedShip.getY() - 2; j <= selectedShip.getY() + 2; j++) {
-                        batch.draw(red, i * 128, j * 128, 128, 128, 0, 0.5f, 0.25f, 0.25f);
+                        batch.draw(red, i * 128, j * 128, 128, 128);
                     }
                 }
             }
