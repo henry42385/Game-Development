@@ -146,19 +146,11 @@ public class ShipManager {
             }
             // Select attack option
             if (MouseHandler.grid.x >= selectedShip.getX() - 2 && MouseHandler.grid.x <= selectedShip.getX() + 2 &&
-                MouseHandler.grid.y >= selectedShip.getY() - 2 && MouseHandler.grid.y <= selectedShip.getY() + 2) {
+                MouseHandler.grid.y >= selectedShip.getY() - 2 && MouseHandler.grid.y <= selectedShip.getY() + 2 &&
+                    (MouseHandler.grid.x != selectedShip.getX() || MouseHandler.grid.y != selectedShip.getY())) {
                 selectedShip.setStatus("complete");
                 return;
             }
-
-//            int directionIndex = -1;
-//            for (Vector2 location : selectedShip.generateMoves()) {
-//                if (location.x == MouseHandler.grid.x && location.y == MouseHandler.grid.y) {
-//                    selectedShip.move(location, directionIndex);
-//                    selectedShip.setStatus("complete");
-//                    break;
-//                } directionIndex++;
-//            }
             // Other options
             this.selectedShip = null;
         }
@@ -176,5 +168,9 @@ public class ShipManager {
         destroyer.dispose();
         target.dispose();
         red.dispose();
+    }
+
+    public void setSelectedShip(Ship selectedShip) {
+        this.selectedShip = selectedShip;
     }
 }

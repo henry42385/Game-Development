@@ -33,10 +33,17 @@ public class GameScreen extends Screen {
 
             @Override public boolean keyUp (int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    if (playerTurn == 0)
+                    if (playerTurn == 0) {
                         playerTurn = 1;
-                    else
+                        for (Ship ship : shipManager.getPlayer1Ships()) {
+                            ship.setStatus("move");
+                        }
+                    } else {
                         playerTurn = 0;
+                        for (Ship ship : shipManager.getPlayer2Ships()) {
+                            ship.setStatus("move");
+                        }
+                    } shipManager.setSelectedShip(null);
                 }
                 return true;
             }
@@ -87,8 +94,6 @@ public class GameScreen extends Screen {
             DynamicCamera.zoomOut();
         } if (Gdx.input.isKeyPressed(Input.Keys.E)) {
             DynamicCamera.zoomIn();
-        } if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            StaticCamera.reset();
         }
     }
 

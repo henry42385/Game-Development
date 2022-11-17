@@ -12,7 +12,7 @@ public abstract class Ship {
         this.x = x;
         this.y = y;
         this.direction = direction;
-        this.status = "move";
+        this.status = "attack";
     }
 
     public void move(Vector2 newLocation ,int directionIndex) {
