@@ -19,6 +19,7 @@ public class Main extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
 		screen.render();
+		MouseHandler.update();
 	}
 	
 	@Override

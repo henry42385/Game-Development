@@ -24,8 +24,6 @@ public class HomeScreen extends Screen {
     }
 
     public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         for (int i = 0; i < Gdx.graphics.getWidth(); i += 128) {
             for (int j = 0; j < Gdx.graphics.getHeight(); j += 128) {
