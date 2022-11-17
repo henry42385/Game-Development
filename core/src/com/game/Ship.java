@@ -15,8 +15,14 @@ public abstract class Ship {
         this.status = "move";
     }
 
-    public void move() {
-
+    public void move(Vector2 newLocation ,int directionIndex) {
+        this.x = (int)newLocation.x;
+        this.y = (int)newLocation.y;
+        this.direction += directionIndex;
+        if (this.direction < 0)
+            this.direction += 8;
+        if (this.direction >= 8)
+            this.direction -= 8;
     }
 
     public abstract boolean attack();
@@ -37,6 +43,10 @@ public abstract class Ship {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Vector2[] generateMoves() {
         Vector2[] moves = new Vector2[3];
         switch (direction) {
@@ -51,7 +61,6 @@ public abstract class Ship {
                 moves[2] = new Vector2(x + 1, y);
                 break;
             case 2:
-                System.out.println("test");
                 moves[0] = new Vector2(x + 1, y + 1);
                 moves[1] = new Vector2(x + 1, y);
                 moves[2] = new Vector2(x + 1, y - 1);

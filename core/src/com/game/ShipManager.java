@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 
 public class ShipManager {
@@ -60,10 +61,17 @@ public class ShipManager {
 //                (int)(worldMouseLocation.y / 128) >= 2 && (int)(worldMouseLocation.y / 128) < map.getHeight() -2)
 
         if (selectedShip != null) {
-            for (Vector2 location : selectedShip.generateMoves()) {
-                System.out.println("X: " + location.x);
-                System.out.println("Y: " + location.y);
-                batch.draw(red, location.x * 128, location.y * 128, 128, 128, 0, 0.5f, 0.25f, 0.25f);
+            if (selectedShip.getStatus().equals("move")) {
+                for (Vector2 location : selectedShip.generateMoves()) {
+                    batch.draw(red, location.x * 128, location.y * 128, 128, 128, 0, 0.5f, 0.25f, 0.25f);
+                }
+            } else if (selectedShip.getStatus().equals("attack")) {
+                batch.draw(target, MouseHandler.grid.x * 128 + 32, MouseHandler.grid.y * 128 + 32, 64, 64);
+                for (int i = selectedShip.getX() - 2; i <= selectedShip.getX() + 2; i++) {
+                    for (int j = selectedShip.getY() - 2; j <= selectedShip.getY() + 2; j++) {
+                        batch.draw(red, i * 128, j * 128, 128, 128, 0, 0.5f, 0.25f, 0.25f);
+                    }
+                }
             }
         }
 
@@ -95,26 +103,64 @@ public class ShipManager {
             // Select another
             if (GameScreen.getPlayerTurn() == 0) {
                 for (Ship ship : player1Ships) {
-                    if (ship.getX() == MouseHandler.grid.x && ship.getY() == MouseHandler.grid.y) {
+                    if (ship.getX() == MouseHandler.grid.x && ship.getY() == MouseHandler.grid.y && !selectedShip.equals(ship)) {
                         selectedShip = ship;
                         return;
                     }
                 }
             } else {
                 for (Ship ship : player2Ships) {
-                    if (ship.getX() == MouseHandler.grid.x && ship.getY() == MouseHandler.grid.y) {
+                    if (ship.getX() == MouseHandler.grid.x && ship.getY() == MouseHandler.grid.y && !selectedShip.equals(ship)) {
                         selectedShip = ship;
                         return;
                     }
                 }
             }
             // Select move option
-            Vector2[] moves = selectedShip.generateMoves();
-//            if (MouseHandler.grid.x == selectedShip.getX() && MouseHandler.grid.y == selectedShip.getY()) {
-//                selectedShip = null;
-//            }
+            int directionIndex = -1;
+            for (Vector2 location : selectedShip.generateMoves()) {
+                if (location.x == MouseHandler.grid.x && location.y == MouseHandler.grid.y) {
+                    selectedShip.move(location, directionIndex);
+                    selectedShip.setStatus("attack");
+                    return;
+                } directionIndex++;
+            }
+            // Other options
+            this.selectedShip = null;
         } else if (selectedShip.getStatus().equals("attack")) {
+            // Select another
+            if (GameScreen.getPlayerTurn() == 0) {
+                for (Ship ship : player1Ships) {
+                    if (ship.getX() == MouseHandler.grid.x && ship.getY() == MouseHandler.grid.y && !selectedShip.equals(ship)) {
+                        selectedShip = ship;
+                        return;
+                    }
+                }
+            } else {
+                for (Ship ship : player2Ships) {
+                    if (ship.getX() == MouseHandler.grid.x && ship.getY() == MouseHandler.grid.y && !selectedShip.equals(ship)) {
+                        selectedShip = ship;
+                        return;
+                    }
+                }
+            }
+            // Select attack option
+            if (MouseHandler.grid.x >= selectedShip.getX() - 2 && MouseHandler.grid.x <= selectedShip.getX() + 2 &&
+                MouseHandler.grid.y >= selectedShip.getY() - 2 && MouseHandler.grid.y <= selectedShip.getY() + 2) {
+                selectedShip.setStatus("complete");
+                return;
+            }
 
+//            int directionIndex = -1;
+//            for (Vector2 location : selectedShip.generateMoves()) {
+//                if (location.x == MouseHandler.grid.x && location.y == MouseHandler.grid.y) {
+//                    selectedShip.move(location, directionIndex);
+//                    selectedShip.setStatus("complete");
+//                    break;
+//                } directionIndex++;
+//            }
+            // Other options
+            this.selectedShip = null;
         }
 
 

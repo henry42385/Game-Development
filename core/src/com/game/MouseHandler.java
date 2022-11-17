@@ -12,7 +12,6 @@ public class MouseHandler {
     public static void update() {
         screen.x = Gdx.input.getX();
         screen.y = Gdx.input.getY();
-        System.out.println(grid.y);
         world = DynamicCamera.get().unproject(screen);
 
 
