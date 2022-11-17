@@ -3,12 +3,10 @@ package com.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen extends Screen {
     private Texture spriteSheet;
@@ -18,11 +16,11 @@ public class GameScreen extends Screen {
     private Map map;
     private ShipManager shipManager;
     private BitmapFont font;
-    private boolean playerTurn1 = true;
+    private static int playerTurn = 0;
 
 
     public void create() {
-        spriteSheet = new Texture("sprites/TerrainSpritesheetOld.png");
+        spriteSheet = new Texture("sprites/TerrainSpritesheet2.png");
 
         batchStatic = new SpriteBatch();
         batchDynamic = new SpriteBatch();
@@ -35,7 +33,10 @@ public class GameScreen extends Screen {
 
             @Override public boolean keyUp (int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    playerTurn1 = !playerTurn1;
+                    if (playerTurn == 0)
+                        playerTurn = 1;
+                    else
+                        playerTurn = 0;
                 }
                 return true;
             }
@@ -61,7 +62,7 @@ public class GameScreen extends Screen {
         StaticCamera.update();
         batchStatic.begin();
         font.getData().setScale(2);
-        if (playerTurn1) {
+        if (playerTurn == 0) {
             font.draw(batchStatic, "Player 2",1300, 750);
             font.setColor(1, 0, 0, 1);
             font.draw(batchStatic, "Player 1",100, 750);
@@ -97,13 +98,13 @@ public class GameScreen extends Screen {
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 if (drawMap[y][x] == 'D')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 0.5f, 0.5f, 0);
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 0.25f, 0.25f, 0);
                 else if (drawMap[y][x] == 'S')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 0.5f, 1, 0);
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.25f, 0.25f, 0.5f, 0);
                 else if (drawMap[y][x] == 'L')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0, 1, 0.5f, 0.5f);
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 0.25f, 0.75f, 0);
                 else if (drawMap[y][x] == 'M')
-                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.5f, 1, 1, 0.5f);
+                    batchDynamic.draw(spriteSheet, x * 128, (map.getHeight() - y - 1) * 128, 128, 128, 0.75f, 0.25f, 1, 0);
             }
         }
         batchDynamic.end();
@@ -130,5 +131,9 @@ public class GameScreen extends Screen {
         shapeRenderer.dispose();
         font.dispose();
         shipManager.dispose();
+    }
+
+    public static int getPlayerTurn() {
+        return playerTurn;
     }
 }
