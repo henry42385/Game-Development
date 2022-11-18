@@ -30,7 +30,7 @@ public class ReplayManager {
     }
 
     public void playReplay(int player) {
-        
+
     }
 
     public void render() {
