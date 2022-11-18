@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class DynamicCamera {
     private static OrthographicCamera camera;
-    private int width = 1080;
-    private int height = 720;
 
     public static OrthographicCamera get() {
         if (DynamicCamera.camera == null) {

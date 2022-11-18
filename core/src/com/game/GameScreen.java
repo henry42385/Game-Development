@@ -17,6 +17,7 @@ public class GameScreen extends Screen {
     private ShipManager shipManager;
     private BitmapFont font;
     private static int playerTurn = 0;
+    private int turn = 0;
 
 
     public void create() {
@@ -35,19 +36,24 @@ public class GameScreen extends Screen {
                 if (keycode == Input.Keys.SPACE) {
                     if (playerTurn == 0) {
                         playerTurn = 1;
-                        for (Ship ship : shipManager.getPlayer1Ships()) {
-                            ship.setStatus("move");
-                        }
                     } else {
                         playerTurn = 0;
-                        for (Ship ship : shipManager.getPlayer2Ships()) {
-                            ship.setStatus("move");
-                        }
+                        turn += 1;
+                        playTurn();
                     } shipManager.setSelectedShip(null);
                 }
                 return true;
             }
         });
+    }
+
+    public void playTurn() {
+        for (Ship ship : shipManager.getPlayer1Ships()) {
+            ship.play();
+        }
+        for (Ship ship : shipManager.getPlayer2Ships()) {
+            ship.play();
+        }
     }
 
     public void render() {
@@ -139,14 +145,14 @@ public class GameScreen extends Screen {
                 boolean vision = false;
                 if (playerTurn == 0) {
                     for (Ship ship : shipManager.getPlayer1Ships()) {
-                        if (x <= ship.getX() + 3 && x >= ship.getX() - 3 &&
-                                y <= map.getHeight() - ship.getY() + 2 && y >= map.getHeight() - ship.getY() - 4)
+                        if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
+                                y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
                             vision = true;
                     }
                 } else {
                     for (Ship ship : shipManager.getPlayer2Ships()) {
-                        if (x <= ship.getX() + 3 && x >= ship.getX() - 3 &&
-                                y <= map.getHeight() - ship.getY() + 2 && y >= map.getHeight() - ship.getY() - 4)
+                        if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
+                                y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
                             vision = true;
                     }
                 }
