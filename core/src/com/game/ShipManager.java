@@ -23,8 +23,8 @@ public class ShipManager {
     public ShipManager() {
         create();
         player1Ships.add(new Destroyer(new Vector2(5, 4), 2));
-        player1Ships.add(new Destroyer(new Vector2(7, 10), 1));
-        player2Ships.add(new Destroyer(new Vector2(10, 4), 6));
+        player1Ships.add(new Destroyer(new Vector2(7, 8), 3));
+        player2Ships.add(new Destroyer(new Vector2(8, 4), 6));
     }
 
     public void create() {

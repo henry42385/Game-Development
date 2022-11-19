@@ -70,15 +70,27 @@ public class MapManager {
 
                 } else if (player == 1) {
                     for (Ship ship : GameScreen.getShipManager().getPlayer1Ships()) {
-                        if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
-                                y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
-                            vision = true;
+                        if (ship.getAfterimage() == null) {
+                            if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
+                                    y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
+                                vision = true;
+                        } else {
+                            if (x <= ship.getAfterimage().x + 3 && x >= ship.getAfterimage().x - 3 &&
+                                    y <= map.getHeight() - ship.getAfterimage().y + 2 && y >= map.getHeight() - ship.getAfterimage().y - 4)
+                                vision = true;
+                        }
                     }
                 } else {
                     for (Ship ship : GameScreen.getShipManager().getPlayer2Ships()) {
-                        if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
-                                y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
-                            vision = true;
+                        if (ship.getAfterimage() == null) {
+                            if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
+                                    y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
+                                vision = true;
+                        } else {
+                            if (x <= ship.getAfterimage().x + 3 && x >= ship.getAfterimage().x - 3 &&
+                                    y <= map.getHeight() - ship.getAfterimage().y + 2 && y >= map.getHeight() - ship.getAfterimage().y - 4)
+                                vision = true;
+                        }
                     }
                 }
                 if (!vision) {

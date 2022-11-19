@@ -16,6 +16,7 @@ public class GameScreen extends Screen {
     private ShapeRenderer shapeRenderer;
     private MapManager mapManager;
     private static ShipManager shipManager;
+    private ReplayManager replayManager;
     private BitmapFont font;
     private int turn = 0;
     private long startTime;
@@ -41,6 +42,7 @@ public class GameScreen extends Screen {
         font = new BitmapFont();
         shipManager = new ShipManager();
         mapManager = new MapManager();
+        replayManager = new ReplayManager();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -92,6 +94,7 @@ public class GameScreen extends Screen {
     }
 
     public void playTurn() {
+        replayManager.setReplay(shipManager.getPlayer1Ships(), shipManager.getPlayer2Ships());
         for (Ship ship : shipManager.getPlayer1Ships()) {
             ship.play();
         }
@@ -119,10 +122,12 @@ public class GameScreen extends Screen {
                         break;
                     case "replay":
                          elapsedTime = TimeUtils.timeSinceMillis(startTime);
-                         if (elapsedTime >= 5000)
+                         if (elapsedTime >= 3000) {
                              turnStatus = "play";
-//                        replayManager.replay(gameStatus);
-                        break;
+                         } else {
+                             replayManager.render(gameStatus, mapManager, elapsedTime);
+                             break;
+                         }
                     case "play":
                         mapManager.renderMap();
                         shipManager.render();
@@ -179,12 +184,12 @@ public class GameScreen extends Screen {
     }
 
     public void dispose() {
-
         batchStatic.dispose();
         shapeRenderer.dispose();
         font.dispose();
         shipManager.dispose();
         mapManager.dispose();
+        replayManager.dispose();
     }
 
     public static ShipManager getShipManager() {

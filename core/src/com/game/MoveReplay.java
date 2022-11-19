@@ -3,15 +3,17 @@ package com.game;
 import com.badlogic.gdx.math.Vector2;
 
 public class MoveReplay {
-    private Vector2 start;
-    private Vector2 end;
-    private int direction;
-    private int team;
+    public Vector2 start;
+    public Vector2 end;
+    public int startDirection;
+    public int endDirection;
+    public int team;
 
-    public MoveReplay(Vector2 start, Vector2 end, int direction, int team) {
+    public MoveReplay(Vector2 start, Vector2 end, int startDirection, int endDirection, int team) {
         this.start = start;
         this.end = end;
-        this.direction = direction;
+        this.startDirection = startDirection;
+        this.endDirection = endDirection;
         this.team = team;
     }
 }
