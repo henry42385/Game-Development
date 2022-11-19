@@ -122,7 +122,7 @@ public class GameScreen extends Screen {
                         break;
                     case "replay":
                          elapsedTime = TimeUtils.timeSinceMillis(startTime);
-                         if (elapsedTime >= 3000) {
+                         if (elapsedTime >= 2000) {
                              turnStatus = "play";
                          } else {
                              replayManager.render(gameStatus, mapManager, elapsedTime);
