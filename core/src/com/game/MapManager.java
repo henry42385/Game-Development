@@ -60,13 +60,15 @@ public class MapManager {
         shapeRenderer.end();
     }
 
-    public void renderFog() {
+    public void renderFog(int player) {
         batch.begin();
         char[][] drawMap = map.getMap();
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 boolean vision = false;
-                if (GameScreen.getPlayerTurn() == 0) {
+                if (player == 0) {
+
+                } else if (player == 1) {
                     for (Ship ship : GameScreen.getShipManager().getPlayer1Ships()) {
                         if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
                                 y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)

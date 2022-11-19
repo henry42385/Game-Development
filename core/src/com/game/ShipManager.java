@@ -47,7 +47,7 @@ public class ShipManager {
         DynamicCamera.get().update();
         batch.setProjectionMatrix(DynamicCamera.get().combined);
         batch.begin();
-        if (GameScreen.getPlayerTurn() == 0) {
+        if (GameScreen.getGameStatus() == 1) {
             for (Ship ship : player2Ships) {
                 if (ship.getAfterimage() == null)
                     batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 1, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f);
@@ -105,7 +105,7 @@ public class ShipManager {
 
     public void updateSelected() {
         if (selectedShip == null || selectedShip.getStatus().equals("complete")) {
-            if (GameScreen.getPlayerTurn() == 0) {
+            if (GameScreen.getGameStatus() == 1) {
                 for (Ship ship : player1Ships) {
                     if (ship.getLocation().equals(MouseHandler.grid)) {
                         selectedShip = ship;
@@ -122,7 +122,7 @@ public class ShipManager {
             }
         } else if (selectedShip.getStatus().equals("move")){
             // Select another
-            if (GameScreen.getPlayerTurn() == 0) {
+            if (GameScreen.getGameStatus() == 1) {
                 for (Ship ship : player1Ships) {
                     if (ship.getLocation().equals(MouseHandler.grid) && !selectedShip.equals(ship)) {
                         selectedShip = ship;
@@ -150,7 +150,7 @@ public class ShipManager {
             this.selectedShip = null;
         } else if (selectedShip.getStatus().equals("attack")) {
             // Select another
-            if (GameScreen.getPlayerTurn() == 0) {
+            if (GameScreen.getGameStatus() == 1) {
                 for (Ship ship : player1Ships) {
                     if (ship.getLocation().equals(MouseHandler.grid) && !selectedShip.equals(ship)) {
                         selectedShip = ship;
