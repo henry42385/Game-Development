@@ -9,11 +9,15 @@ public abstract class Ship {
     private int direction;
     private int afterimageDirection;
     private String status;
+    private int maxHp;
+    private int currentHp;
 
-    public Ship(Vector2 location, int direction) {
+    public Ship(Vector2 location, int direction, int maxHp) {
         this.location = location;
         this.direction = direction;
         this.status = "move";
+        this.maxHp = maxHp;
+        this.currentHp = maxHp;
     }
 
     public void move(Vector2 newLocation, int moveDirection) {
@@ -47,6 +51,14 @@ public abstract class Ship {
 
     public int getAfterimageDirection() {
         return afterimageDirection;
+    }
+
+    public int getHp() {
+        return currentHp;
+    }
+
+    public void takeDamage() {
+        this.currentHp--;
     }
 
     public String getStatus() {

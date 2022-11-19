@@ -9,15 +9,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import java.util.Iterator;
+
 public class GameScreen extends Screen {
-
-    private SpriteBatch batchStatic;
-
     private ShapeRenderer shapeRenderer;
     private MapManager mapManager;
-    private static ShipManager shipManager;
+    private ShipManager shipManager;
     private ReplayManager replayManager;
-    private BitmapFont font;
+    private ResourceManager resourceManager;
+
     private int turn = 0;
     private long startTime;
     private long elapsedTime;
@@ -34,15 +34,11 @@ public class GameScreen extends Screen {
 
 
     public void create() {
-
-
-        batchStatic = new SpriteBatch();
-
         shapeRenderer = new ShapeRenderer();
-        font = new BitmapFont();
         shipManager = new ShipManager();
         mapManager = new MapManager();
         replayManager = new ReplayManager();
+        resourceManager = new ResourceManager();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -96,10 +92,38 @@ public class GameScreen extends Screen {
     public void playTurn() {
         replayManager.setReplay(shipManager.getPlayer1Ships(), shipManager.getPlayer2Ships());
         for (Ship ship : shipManager.getPlayer1Ships()) {
-            ship.play();
+            if (ship.getAttack() != null) {
+                for (Ship shipEnemy : shipManager.getPlayer2Ships()) {
+                    if (shipEnemy.getLocation().equals(ship.getAttack()))
+                        shipEnemy.takeDamage();
+                }
+            }
+        } for (Ship ship : shipManager.getPlayer2Ships()) {
+            if (ship.getAttack() != null) {
+                for (Ship shipEnemy : shipManager.getPlayer1Ships()) {
+                    if (shipEnemy.getLocation().equals(ship.getAttack()))
+                        shipEnemy.takeDamage();
+                }
+            }
         }
-        for (Ship ship : shipManager.getPlayer2Ships()) {
-            ship.play();
+
+        Iterator<Ship> itr = shipManager.getPlayer1Ships().iterator();
+        while (itr.hasNext()) {
+            Ship ship = itr.next();
+            if (ship.getHp() == 0) {
+                itr.remove();
+            } else {
+                ship.play();
+            }
+        }
+        itr = shipManager.getPlayer2Ships().iterator();
+        while (itr.hasNext()) {
+            Ship ship = itr.next();
+            if (ship.getHp() == 0) {
+                itr.remove();
+            } else {
+                ship.play();
+            }
         }
     }
 
@@ -116,7 +140,7 @@ public class GameScreen extends Screen {
                 switch (turnStatus) {
                     case "start":
                         mapManager.renderMap();
-                        mapManager.renderFog(0);
+                        mapManager.renderFog(0, shipManager);
                         mapManager.renderGrid();
                         renderStart();
                         break;
@@ -125,13 +149,16 @@ public class GameScreen extends Screen {
                          if (elapsedTime >= 2000) {
                              turnStatus = "play";
                          } else {
+                             mapManager.renderMap();
                              replayManager.render(gameStatus, mapManager, elapsedTime);
+                             mapManager.renderFog(gameStatus, shipManager);
+                             mapManager.renderGrid();
                              break;
                          }
                     case "play":
                         mapManager.renderMap();
                         shipManager.render();
-                        mapManager.renderFog(gameStatus);
+                        mapManager.renderFog(gameStatus, shipManager);
                         mapManager.renderGrid();
                         renderHUD();
                 }
@@ -142,29 +169,29 @@ public class GameScreen extends Screen {
 
     private void renderHUD() {
         StaticCamera.update();
-        batchStatic.setProjectionMatrix(StaticCamera.get().combined);
-        batchStatic.begin();
-        font.getData().setScale(2);
+        resourceManager.batch.setProjectionMatrix(StaticCamera.get().combined);
+        resourceManager.batch.begin();
+        resourceManager.font.getData().setScale(2);
         if (gameStatus == 1) {
-            font.draw(batchStatic, "Player 2",1300, 750);
-            font.setColor(1, 0, 0, 1);
-            font.draw(batchStatic, "Player 1",100, 750);
+            resourceManager.font.draw(resourceManager.batch, "Player 2",1300, 750);
+            resourceManager.font.setColor(1, 0, 0, 1);
+            resourceManager.font.draw(resourceManager.batch, "Player 1",100, 750);
         } else if (gameStatus == 2) {
-            font.draw(batchStatic, "Player 1",100, 750);
-            font.setColor(1, 0, 0, 1);
-            font.draw(batchStatic, "Player 2",1300, 750);
-        } font.setColor(1, 1, 1, 1);
-        batchStatic.end();
+            resourceManager.font.draw(resourceManager.batch, "Player 1",100, 750);
+            resourceManager.font.setColor(1, 0, 0, 1);
+            resourceManager.font.draw(resourceManager.batch, "Player 2",1300, 750);
+        } resourceManager.font.setColor(1, 1, 1, 1);
+        resourceManager.batch.end();
     }
 
     private void renderStart() {
         StaticCamera.update();
-        batchStatic.setProjectionMatrix(StaticCamera.get().combined);
-        batchStatic.begin();
-        font.getData().setScale(7);
-        font.setColor(1, 0, 0, 1);
-        font.draw(batchStatic, "Player " + gameStatus, StaticCamera.get().viewportWidth/2 - 200, StaticCamera.get().viewportHeight/2 + 50);
-        batchStatic.end();
+        resourceManager.batch.setProjectionMatrix(StaticCamera.get().combined);
+        resourceManager.batch.begin();
+        resourceManager.font.getData().setScale(7);
+        resourceManager.font.setColor(1, 0, 0, 1);
+        resourceManager.font.draw(resourceManager.batch, "Player " + gameStatus, StaticCamera.get().viewportWidth/2 - 200, StaticCamera.get().viewportHeight/2 + 50);
+        resourceManager.batch.end();
     }
 
     private void updateView() {
@@ -184,16 +211,11 @@ public class GameScreen extends Screen {
     }
 
     public void dispose() {
-        batchStatic.dispose();
         shapeRenderer.dispose();
-        font.dispose();
         shipManager.dispose();
         mapManager.dispose();
         replayManager.dispose();
-    }
-
-    public static ShipManager getShipManager() {
-        return shipManager;
+        resourceManager.dispose();
     }
 
     public static int getGameStatus() {

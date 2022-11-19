@@ -60,7 +60,7 @@ public class MapManager {
         shapeRenderer.end();
     }
 
-    public void renderFog(int player) {
+    public void renderFog(int player, ShipManager sm) {
         batch.begin();
         char[][] drawMap = map.getMap();
         for (int y = 0; y < map.getHeight(); y++) {
@@ -69,7 +69,7 @@ public class MapManager {
                 if (player == 0) {
 
                 } else if (player == 1) {
-                    for (Ship ship : GameScreen.getShipManager().getPlayer1Ships()) {
+                    for (Ship ship : sm.getPlayer1Ships()) {
                         if (ship.getAfterimage() == null) {
                             if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
                                     y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
@@ -81,7 +81,7 @@ public class MapManager {
                         }
                     }
                 } else {
-                    for (Ship ship : GameScreen.getShipManager().getPlayer2Ships()) {
+                    for (Ship ship : sm.getPlayer2Ships()) {
                         if (ship.getAfterimage() == null) {
                             if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
                                     y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)

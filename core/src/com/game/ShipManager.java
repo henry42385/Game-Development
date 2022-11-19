@@ -3,10 +3,8 @@ package com.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
@@ -15,6 +13,7 @@ public class ShipManager {
     private Texture target;
     private Texture red;
     private Texture arrow;
+    private Texture hp;
     private SpriteBatch batch;
     private ArrayList<Ship> player1Ships = new ArrayList<>();
     private ArrayList<Ship> player2Ships = new ArrayList<>();
@@ -33,6 +32,7 @@ public class ShipManager {
         target = new Texture("sprites/Target.png");
         red = new Texture("sprites/Red.png");
         arrow = new Texture("sprites/Arrow.png");
+        hp = new Texture("sprites/hp.png");
     }
 
     public ArrayList<Ship> getPlayer1Ships() {
@@ -49,10 +49,14 @@ public class ShipManager {
         batch.begin();
         if (GameScreen.getGameStatus() == 1) {
             for (Ship ship : player2Ships) {
-                if (ship.getAfterimage() == null)
+                if (ship.getAfterimage() == null) {
                     batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 1, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f);
-                else
+                    batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 1, (float) 1/3 * ship.getHp(), 0.5f);
+                } else {
                     batch.draw(destroyer, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128, 128, 128, (float) 1 / 8 * ship.getAfterimageDirection(), 1, (float) 1 / 8 * (ship.getAfterimageDirection() + 1), 0.5f);
+                    batch.draw(hp, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 1, (float) 1/3 * ship.getHp(), 0.5f);
+
+                }
             }
             for (Ship ship : player1Ships) {
                 if (ship.getAfterimage() != null) {
@@ -60,14 +64,20 @@ public class ShipManager {
                     if (ship.getAttack() != null) {
                         batch.draw(target, ship.getAttack().x * 128 + 32, ship.getAttack().y * 128 + 32, 64, 64);
                     }
-                } batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.5f, (float) 1 / 8 * (ship.getDirection() + 1), 0);
+                }
+                batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.5f, (float) 1 / 8 * (ship.getDirection() + 1), 0);
+                batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 0.5f, (float) 1/3 * ship.getHp(), 0);
+
             }
         } else {
             for (Ship ship : player1Ships) {
-                if (ship.getAfterimage() == null)
+                if (ship.getAfterimage() == null) {
                     batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.5f, (float) 1 / 8 * (ship.getDirection() + 1), 0);
-                else
+                    batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1 / 3 * (ship.getHp() - 1), 0.5f, (float) 1 / 3 * ship.getHp(), 0);
+                } else {
                     batch.draw(destroyer, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128, 128, 128, (float) 1 / 8 * ship.getAfterimageDirection(), 0.5f, (float) 1 / 8 * (ship.getAfterimageDirection() + 1), 0);
+                    batch.draw(hp, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 0.5f, (float) 1/3 * ship.getHp(), 0);
+                }
             }
             for (Ship ship : player2Ships) {
                 if (ship.getAfterimage() != null) {
@@ -75,7 +85,10 @@ public class ShipManager {
                     if (ship.getAttack() != null) {
                         batch.draw(target, ship.getAttack().x * 128 + 32, ship.getAttack().y * 128 + 32, 64, 64);
                     }
-                } batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 1, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f);
+                }
+                batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 1, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f);
+                batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 1, (float) 1/3 * ship.getHp(), 0.5f);
+
             }
         }
 
