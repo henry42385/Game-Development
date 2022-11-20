@@ -3,9 +3,6 @@ package com.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -128,42 +125,37 @@ public class GameScreen extends Screen {
     }
 
     public void render() {
-        switch (gameStatus) {
-            case 0:
-                mapManager.renderMap();
-                mapManager.renderGrid();
-                shipManager.render();
-                updateView();
-                break;
-            case 1:
-            case 2:
-                switch (turnStatus) {
-                    case "start":
+        updateView();
+        if (gameStatus == 0) {
+            mapManager.renderMap();
+            mapManager.renderGrid();
+            shipManager.render();
+        } else {
+            switch (turnStatus) {
+                case "start":
+                    mapManager.renderMap();
+                    mapManager.renderFog(0, shipManager);
+                    mapManager.renderGrid();
+                    renderStart();
+                    break;
+                case "replay":
+                    elapsedTime = TimeUtils.timeSinceMillis(startTime);
+                    if (elapsedTime >= 2000) {
+                        turnStatus = "play";
+                    } else {
                         mapManager.renderMap();
-                        mapManager.renderFog(0, shipManager);
-                        mapManager.renderGrid();
-                        renderStart();
-                        break;
-                    case "replay":
-                         elapsedTime = TimeUtils.timeSinceMillis(startTime);
-                         if (elapsedTime >= 2000) {
-                             turnStatus = "play";
-                         } else {
-                             mapManager.renderMap();
-                             replayManager.render(gameStatus, mapManager, elapsedTime);
-                             mapManager.renderFog(gameStatus, shipManager);
-                             mapManager.renderGrid();
-                             break;
-                         }
-                    case "play":
-                        mapManager.renderMap();
-                        shipManager.render();
+                        replayManager.render(gameStatus, mapManager, elapsedTime);
                         mapManager.renderFog(gameStatus, shipManager);
                         mapManager.renderGrid();
-                        renderHUD();
-                }
-                updateView();
-                break;
+                        break;
+                    }
+                case "play":
+                    mapManager.renderMap();
+                    shipManager.render();
+                    mapManager.renderFog(gameStatus, shipManager);
+                    mapManager.renderGrid();
+                    renderHUD();
+            }
         }
     }
 
