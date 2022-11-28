@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class ResourceManager {
     public BitmapFont font;
     public Texture topBar;
+    public Texture settings;
     public SpriteBatch batch;
 
     public ResourceManager() {
@@ -18,11 +19,13 @@ public class ResourceManager {
         font = new BitmapFont();
         batch = new SpriteBatch();
         topBar = new Texture("sprites/TopBar2.png");
+        settings = new Texture("sprites/guiSprites/settings.png");
     }
 
     public void dispose() {
         font.dispose();
         batch.dispose();
         topBar.dispose();
+        settings.dispose();
     }
 }

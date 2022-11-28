@@ -3,10 +3,10 @@ package com.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class GUI {
+public class HudManager {
     private Texture replayButton;
 
-    public GUI() {
+    public HudManager() {
         create();
     }
 
