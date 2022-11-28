@@ -23,7 +23,7 @@ public class MapManager {
     }
 
     public void loadMap(String path) {
-        this.map = new Map("assets/maps/map1.txt");
+        this.map = new Map("maps/map1.txt");
     }
 
     public void renderMap() {
