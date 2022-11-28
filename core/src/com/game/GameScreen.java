@@ -14,6 +14,7 @@ public class GameScreen extends Screen {
     private ShipManager shipManager;
     private ReplayManager replayManager;
     private ResourceManager resourceManager;
+    private GUI gui;
 
     private int turn = 0;
     private long startTime;
@@ -36,6 +37,7 @@ public class GameScreen extends Screen {
         mapManager = new MapManager();
         replayManager = new ReplayManager();
         resourceManager = new ResourceManager();
+        gui = new GUI();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
 
@@ -154,24 +156,38 @@ public class GameScreen extends Screen {
                     shipManager.render();
                     mapManager.renderFog(gameStatus, shipManager);
                     mapManager.renderGrid();
-                    renderHUD();
             }
         }
+        renderHUD();
     }
 
     private void renderHUD() {
         StaticCamera.update();
+        ResourceManager rm = resourceManager;
         resourceManager.batch.setProjectionMatrix(StaticCamera.get().combined);
         resourceManager.batch.begin();
         resourceManager.font.getData().setScale(2);
-        if (gameStatus == 1) {
-            resourceManager.font.draw(resourceManager.batch, "Player 2",1300, 750);
-            resourceManager.font.setColor(1, 0, 0, 1);
-            resourceManager.font.draw(resourceManager.batch, "Player 1",100, 750);
+        rm.batch.draw(rm.topBar, 0, DynamicCamera.get().viewportHeight - 200, 1440, 200);
+        if (gameStatus == 0) {
+            resourceManager.font.draw(resourceManager.batch, "Press anywhere to start", 500, 500);
+        } else if (gameStatus == 1) {
+            if (turnStatus.equals("replay")) {
+                resourceManager.font.draw(resourceManager.batch, "Replaying last turn", 500, 500);
+            } else if (turnStatus.equals("play")) {
+                gui.render(resourceManager.batch);
+                resourceManager.font.draw(resourceManager.batch, "Player 2", 1300, 750);
+                resourceManager.font.setColor(1, 0, 0, 1);
+                resourceManager.font.draw(resourceManager.batch, "Player 1", 100, 750);
+            }
         } else if (gameStatus == 2) {
-            resourceManager.font.draw(resourceManager.batch, "Player 1",100, 750);
-            resourceManager.font.setColor(1, 0, 0, 1);
-            resourceManager.font.draw(resourceManager.batch, "Player 2",1300, 750);
+            if (turnStatus.equals("replay")) {
+                resourceManager.font.draw(resourceManager.batch, "Replaying last turn", 500, 500);
+            } else if (turnStatus.equals("play")) {
+                gui.render(resourceManager.batch);
+                resourceManager.font.draw(resourceManager.batch, "Player 1", 100, 750);
+                resourceManager.font.setColor(1, 0, 0, 1);
+                resourceManager.font.draw(resourceManager.batch, "Player 2", 1300, 750);
+            }
         } resourceManager.font.setColor(1, 1, 1, 1);
         resourceManager.batch.end();
     }
@@ -208,6 +224,7 @@ public class GameScreen extends Screen {
         mapManager.dispose();
         replayManager.dispose();
         resourceManager.dispose();
+        gui.dispose();
     }
 
     public static int getGameStatus() {
