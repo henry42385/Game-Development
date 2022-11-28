@@ -78,7 +78,6 @@ public class GameScreen extends Screen {
                                     turnStatus = "start";
                                     gameStatus = 1;
                                     playTurn();
-                                    turn++;
                             }
                             break;
                     }
@@ -124,6 +123,8 @@ public class GameScreen extends Screen {
                 ship.play();
             }
         }
+        turn++;
+        System.out.println(turn);
     }
 
     public void render() {
@@ -163,6 +164,7 @@ public class GameScreen extends Screen {
                             MouseHandler.screen.y > 50 &&
                             turn != 0) {
                         turnStatus = "replay";
+                        System.out.println("test");
                         startTime = TimeUtils.millis();
                     }
             }
@@ -177,7 +179,7 @@ public class GameScreen extends Screen {
         resourceManager.batch.begin();
         resourceManager.font.getData().setScale(2);
         rm.batch.draw(rm.topBar, 0, DynamicCamera.get().viewportHeight - 175, 1440, 200);
-        rm.batch.draw(rm.settings, 1300, 650, 128, 128);
+        rm.batch.draw(rm.settings, 1350, 700, 64, 64);
         if (gameStatus == 0) {
             resourceManager.font.draw(resourceManager.batch, "Press anywhere to start", 500, 500);
         } else if (gameStatus == 1) {
@@ -185,8 +187,6 @@ public class GameScreen extends Screen {
                 resourceManager.font.draw(resourceManager.batch, "Replaying last turn", 500, 500);
             } else if (turnStatus.equals("play")) {
                 hudManager.render(resourceManager.batch);
-                resourceManager.font.draw(resourceManager.batch, "Player 2", 1300, 750);
-                resourceManager.font.setColor(1, 0, 0, 1);
                 resourceManager.font.draw(resourceManager.batch, "Player 1", 100, 750);
             }
         } else if (gameStatus == 2) {
@@ -195,8 +195,6 @@ public class GameScreen extends Screen {
             } else if (turnStatus.equals("play")) {
                 hudManager.render(resourceManager.batch);
                 resourceManager.font.draw(resourceManager.batch, "Player 1", 100, 750);
-                resourceManager.font.setColor(1, 0, 0, 1);
-                resourceManager.font.draw(resourceManager.batch, "Player 2", 1300, 750);
             }
         } resourceManager.font.setColor(1, 1, 1, 1);
         resourceManager.batch.end();

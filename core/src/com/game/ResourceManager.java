@@ -1,5 +1,7 @@
 package com.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,6 +12,7 @@ public class ResourceManager {
     public Texture topBar;
     public Texture settings;
     public SpriteBatch batch;
+    public Music music;
 
     public ResourceManager() {
         create();
@@ -19,7 +22,10 @@ public class ResourceManager {
         font = new BitmapFont();
         batch = new SpriteBatch();
         topBar = new Texture("sprites/TopBar2.png");
-        settings = new Texture("sprites/guiSprites/settings.png");
+        settings = new Texture("sprites/settingsCog.png");
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/song1.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     public void dispose() {
@@ -27,5 +33,6 @@ public class ResourceManager {
         batch.dispose();
         topBar.dispose();
         settings.dispose();
+        music.dispose();
     }
 }
