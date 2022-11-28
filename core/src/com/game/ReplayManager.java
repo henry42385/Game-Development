@@ -4,10 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReplayManager {
-    private ArrayList<MoveReplay> moves;
-    private ArrayList<AttackReplay> attacks;
+    private List<MoveReplay> moves;
+    private List<AttackReplay> attacks;
     private Texture destroyer;
     private Texture attack;
     private Texture explosion;
