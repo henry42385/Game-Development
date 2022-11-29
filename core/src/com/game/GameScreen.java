@@ -13,7 +13,7 @@ public class GameScreen extends Screen {
     private MapManager mapManager;
     private ShipManager shipManager;
     private ReplayManager replayManager;
-    private ResourceManager resourceManager;
+    private ResourceManager rm;
     private HudManager hudManager;
 
     private int turn = 0;
@@ -36,7 +36,7 @@ public class GameScreen extends Screen {
         shipManager = new ShipManager();
         mapManager = new MapManager();
         replayManager = new ReplayManager();
-        resourceManager = new ResourceManager();
+        rm = new ResourceManager();
         hudManager = new HudManager();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -128,6 +128,7 @@ public class GameScreen extends Screen {
     }
 
     public void render() {
+        inputChecker();
         updateView();
         if (gameStatus == 0) {
             mapManager.renderMap();
@@ -157,16 +158,6 @@ public class GameScreen extends Screen {
                     shipManager.render();
                     mapManager.renderFog(gameStatus, shipManager);
                     mapManager.renderGrid();
-                    if (Gdx.input.isTouched() &&
-                            MouseHandler.screen.x < 784 &&
-                            MouseHandler.screen.x > 656 &&
-                            MouseHandler.screen.y < 178 &&
-                            MouseHandler.screen.y > 50 &&
-                            turn != 0) {
-                        turnStatus = "replay";
-                        System.out.println("test");
-                        startTime = TimeUtils.millis();
-                    }
             }
         }
         renderHUD();
@@ -174,40 +165,41 @@ public class GameScreen extends Screen {
 
     private void renderHUD() {
         StaticCamera.update();
-        ResourceManager rm = resourceManager;
-        resourceManager.batch.setProjectionMatrix(StaticCamera.get().combined);
-        resourceManager.batch.begin();
-        resourceManager.font.getData().setScale(2);
+        ResourceManager rm = this.rm;
+        this.rm.batch.setProjectionMatrix(StaticCamera.get().combined);
+        this.rm.batch.begin();
+        this.rm.font.getData().setScale(2);
         rm.batch.draw(rm.topBar, 0, DynamicCamera.get().viewportHeight - 175, 1440, 200);
         rm.batch.draw(rm.settings, 1350, 700, 64, 64);
         if (gameStatus == 0) {
-            resourceManager.font.draw(resourceManager.batch, "Press anywhere to start", 500, 500);
+            this.rm.font.draw(this.rm.batch, "Press anywhere to start", 500, 500);
         } else if (gameStatus == 1) {
             if (turnStatus.equals("replay")) {
-                resourceManager.font.draw(resourceManager.batch, "Replaying last turn", 500, 500);
+                this.rm.font.draw(this.rm.batch, "Replaying last turn", 500, 500);
             } else if (turnStatus.equals("play")) {
-                hudManager.render(resourceManager.batch);
-                resourceManager.font.draw(resourceManager.batch, "Player 1", 100, 750);
+                hudManager.render(this.rm.batch);
+                this.rm.font.draw(this.rm.batch, "Player 1", 100, 750);
             }
         } else if (gameStatus == 2) {
             if (turnStatus.equals("replay")) {
-                resourceManager.font.draw(resourceManager.batch, "Replaying last turn", 500, 500);
+                this.rm.font.draw(this.rm.batch, "Replaying last turn", 500, 500);
             } else if (turnStatus.equals("play")) {
-                hudManager.render(resourceManager.batch);
-                resourceManager.font.draw(resourceManager.batch, "Player 1", 100, 750);
+                hudManager.render(this.rm.batch);
+                this.rm.font.draw(this.rm.batch, "Player 2", 100, 750);
             }
-        } resourceManager.font.setColor(1, 1, 1, 1);
-        resourceManager.batch.end();
+        } this.rm.font.setColor(1, 1, 1, 1);
+        this.rm.batch.end();
     }
 
     private void renderStart() {
         StaticCamera.update();
-        resourceManager.batch.setProjectionMatrix(StaticCamera.get().combined);
-        resourceManager.batch.begin();
-        resourceManager.font.getData().setScale(7);
-        resourceManager.font.setColor(1, 0, 0, 1);
-        resourceManager.font.draw(resourceManager.batch, "Player " + gameStatus, StaticCamera.get().viewportWidth/2 - 200, StaticCamera.get().viewportHeight/2 + 50);
-        resourceManager.batch.end();
+        rm.batch.setProjectionMatrix(StaticCamera.get().combined);
+        rm.batch.begin();
+        rm.font.getData().setScale(3);
+        rm.font.setColor(1, 0, 0, 1);
+        rm.font.draw(rm.batch, "Player " + gameStatus, 650, 450);
+        rm.batch.draw(rm.start, 608, 350, 224, 34);
+        rm.batch.end();
     }
 
     private void updateView() {
@@ -226,12 +218,64 @@ public class GameScreen extends Screen {
         }
     }
 
+    private void inputChecker() {
+        if (gameStatus == 0) {
+            if (Gdx.input.isTouched())
+                gameStatus = 1;
+        }
+
+        //Replay button
+        if (Gdx.input.isTouched() &&
+                MouseHandler.screen.x < 784 &&
+                MouseHandler.screen.x > 656 &&
+                MouseHandler.screen.y < 178 &&
+                MouseHandler.screen.y > 50 &&
+                turn != 0 &&
+                !turnStatus.equals("start")) {
+            turnStatus = "replay";
+            startTime = TimeUtils.millis();
+        }
+
+        // End turn button
+        else if (Gdx.input.isTouched() &&
+                    MouseHandler.screen.x < 984 &&
+                    MouseHandler.screen.x > 856 &&
+                    MouseHandler.screen.y < 178 &&
+                    MouseHandler.screen.y > 50 &&
+                    !turnStatus.equals("start")) {
+            if (gameStatus == 1) {
+                gameStatus = 2;
+                turnStatus = "start";
+            } else if (gameStatus == 2) {
+                gameStatus = 1;
+                turnStatus = "start";
+                playTurn();
+            }
+        }
+
+        // Start turn button
+        else if (Gdx.input.isTouched() &&
+                    MouseHandler.screen.x < 832 &&
+                    MouseHandler.screen.x > 608 &&
+                    MouseHandler.screen.y < 384 &&
+                    MouseHandler.screen.y > 350 &&
+                    turnStatus.equals("start")) {
+            if (turn != 0) {
+                System.out.println("test");
+                turnStatus = "replay";
+                startTime = TimeUtils.millis();
+            } else {
+                turnStatus = "play";
+            }
+        }
+    }
+
     public void dispose() {
         shapeRenderer.dispose();
         shipManager.dispose();
         mapManager.dispose();
         replayManager.dispose();
-        resourceManager.dispose();
+        rm.dispose();
         hudManager.dispose();
     }
 

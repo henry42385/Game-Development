@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class ResourceManager {
     public BitmapFont font;
     public Texture topBar;
+    public Texture start;
+    public Texture endTurn;
     public Texture settings;
     public SpriteBatch batch;
     public Music music;
@@ -23,7 +25,10 @@ public class ResourceManager {
         batch = new SpriteBatch();
         topBar = new Texture("sprites/TopBar2.png");
         settings = new Texture("sprites/settingsCog.png");
+        start = new Texture("sprites/start.png");
+        endTurn = new Texture("sprites/endTurn.png");
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/song1.mp3"));
+
         music.setLooping(true);
         music.play();
     }
@@ -34,5 +39,7 @@ public class ResourceManager {
         topBar.dispose();
         settings.dispose();
         music.dispose();
+        start.dispose();
+        endTurn.dispose();
     }
 }

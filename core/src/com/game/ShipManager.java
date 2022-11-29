@@ -14,6 +14,7 @@ public class ShipManager {
     private Texture red;
     private Texture arrow;
     private Texture hp;
+    private Texture missileShip;
     private SpriteBatch batch;
     private ArrayList<Ship> player1Ships = new ArrayList<>();
     private ArrayList<Ship> player2Ships = new ArrayList<>();
@@ -28,6 +29,7 @@ public class ShipManager {
 
     public void create() {
         batch = new SpriteBatch();
+        missileShip = new Texture(Gdx.files.internal("sprites/MissileShip.png"));
         destroyer = new Texture("sprites/Destroyer.png");
         target = new Texture("sprites/Target.png");
         red = new Texture("sprites/Red.png");
@@ -47,6 +49,7 @@ public class ShipManager {
         DynamicCamera.get().update();
         batch.setProjectionMatrix(DynamicCamera.get().combined);
         batch.begin();
+        batch.draw(missileShip, 3 * 128, 6 * 128, 128, 128, (float)2/8, 0.5f, (float)3/8, 0);
         if (GameScreen.getGameStatus() == 1) {
             for (Ship ship : player2Ships) {
                 if (ship.getAfterimage() == null) {
@@ -204,6 +207,7 @@ public class ShipManager {
         destroyer.dispose();
         target.dispose();
         red.dispose();
+        missileShip.dispose();
     }
 
     public void setSelectedShip(Ship selectedShip) {
