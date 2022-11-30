@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.Iterator;
@@ -224,12 +225,14 @@ public class GameScreen extends Screen {
                 gameStatus = 1;
         }
 
+        Vector3 coords = StaticCamera.get().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+
         //Replay button
         if (Gdx.input.isTouched() &&
-                MouseHandler.screen.x < 784 &&
-                MouseHandler.screen.x > 656 &&
-                MouseHandler.screen.y < 178 &&
-                MouseHandler.screen.y > 50 &&
+                coords.x < 784 &&
+                coords.x > 656 &&
+                coords.y < 178 &&
+                coords.y > 50 &&
                 turn != 0 &&
                 !turnStatus.equals("start")) {
             turnStatus = "replay";
@@ -238,10 +241,10 @@ public class GameScreen extends Screen {
 
         // End turn button
         else if (Gdx.input.isTouched() &&
-                    MouseHandler.screen.x < 984 &&
-                    MouseHandler.screen.x > 856 &&
-                    MouseHandler.screen.y < 178 &&
-                    MouseHandler.screen.y > 50 &&
+                    coords.x < 984 &&
+                    coords.x > 856 &&
+                    coords.y < 178 &&
+                    coords.y > 50 &&
                     !turnStatus.equals("start")) {
             if (gameStatus == 1) {
                 gameStatus = 2;
@@ -255,10 +258,10 @@ public class GameScreen extends Screen {
 
         // Start turn button
         else if (Gdx.input.isTouched() &&
-                    MouseHandler.screen.x < 832 &&
-                    MouseHandler.screen.x > 608 &&
-                    MouseHandler.screen.y < 384 &&
-                    MouseHandler.screen.y > 350 &&
+                    coords.x < 832 &&
+                    coords.x > 608 &&
+                    coords.y < 384 &&
+                    coords.y > 350 &&
                     turnStatus.equals("start")) {
             if (turn != 0) {
                 System.out.println("test");
