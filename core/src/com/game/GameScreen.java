@@ -23,6 +23,7 @@ public class GameScreen extends Screen {
     /*  start
         player1
         player2
+        end
      */
     private static int gameStatus = 0;
     /*  start
@@ -30,6 +31,7 @@ public class GameScreen extends Screen {
         play
      */
     private String turnStatus = "start";
+    private String winner;
 
 
     public void create() {
@@ -124,6 +126,18 @@ public class GameScreen extends Screen {
                 ship.play();
             }
         }
+
+        if (shipManager.getPlayer1Ships().size() == 0 && shipManager.getPlayer2Ships().size() == 0) {
+            winner = "Draw";
+            gameStatus = 3;
+        } else if (shipManager.getPlayer1Ships().size() == 0) {
+            winner = "Player 1 wins";
+            gameStatus = 3;
+        } else if (shipManager.getPlayer2Ships().size() == 0) {
+            winner = "Player 2 wins";
+            gameStatus = 3;
+        }
+
         turn++;
         System.out.println(turn);
     }
@@ -135,7 +149,7 @@ public class GameScreen extends Screen {
             mapManager.renderMap();
             mapManager.renderGrid();
             shipManager.render();
-        } else {
+        } else if (gameStatus == 1 || gameStatus == 2){
             switch (turnStatus) {
                 case "start":
                     mapManager.renderMap();
@@ -160,6 +174,10 @@ public class GameScreen extends Screen {
                     mapManager.renderFog(gameStatus, shipManager);
                     mapManager.renderGrid();
             }
+        } else if (gameStatus == 3) {
+            mapManager.renderMap();
+            mapManager.renderGrid();
+            shipManager.render();
         }
         renderHUD();
     }
@@ -188,7 +206,11 @@ public class GameScreen extends Screen {
                 hudManager.render(this.rm.batch);
                 this.rm.font.draw(this.rm.batch, "Player 2", 100, 750);
             }
-        } this.rm.font.setColor(1, 1, 1, 1);
+        } else if (gameStatus == 3) {
+            this.rm.font.draw(rm.batch, winner, 500, 500);
+        }
+
+        this.rm.font.setColor(1, 1, 1, 1);
         this.rm.batch.end();
     }
 
