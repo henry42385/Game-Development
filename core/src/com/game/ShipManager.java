@@ -20,10 +20,10 @@ public class ShipManager {
 
     public ShipManager() {
         create();
-        ships.add(new Destroyer(new Vector2(4, 4), 2, 0));
-        ships.add(new Destroyer(new Vector2(4, 5), 3, 0));
-        ships.add(new MissileShip(new Vector2(5, 4), 6, 1));
-        ships.add(new MissileShip(new Vector2(5, 5), 7, 1));
+        ships.add(new MissileShip(new Vector2(6, 6), 2, 0));
+        ships.add(new Destroyer(new Vector2(4, 4), 3, 0));
+        ships.add(new Destroyer(new Vector2(10, 4), 6, 1));
+        ships.add(new MissileShip(new Vector2(10, 5), 7, 1));
     }
 
     public void create() {
@@ -78,14 +78,10 @@ public class ShipManager {
                     batch.draw(red, location.x * 128, location.y * 128, 128, 128);
                 }
             } else if (selectedShip.getStatus().equals("attack")) {
-                if (MouseHandler.grid.x >= selectedShip.getLocation().x - 2 && MouseHandler.grid.x <= selectedShip.getLocation().x + 2 &&
-                        MouseHandler.grid.y >= selectedShip.getLocation().y - 2 && MouseHandler.grid.y <= selectedShip.getLocation().y + 2 &&
-                        (MouseHandler.grid.x != selectedShip.getLocation().x || MouseHandler.grid.y != selectedShip.getLocation().y))
-                batch.draw(target, MouseHandler.grid.x * 128 + 32, MouseHandler.grid.y * 128 + 32, 64, 64);
-                for (int i = (int)selectedShip.getLocation().x - 2; i <= (int)selectedShip.getLocation().x + 2; i++) {
-                    for (int j = (int)selectedShip.getLocation().y - 2; j <= (int)selectedShip.getLocation().y + 2; j++) {
-                        batch.draw(red, i * 128, j * 128, 128, 128);
-                    }
+                for (Vector2 location : selectedShip.generateAttacks()) {
+                    batch.draw(red, location.x * 128, location.y * 128, 128, 128);
+                    if (MouseHandler.grid.equals(location) && !MouseHandler.grid.equals(selectedShip.getLocation()))
+                        batch.draw(target, MouseHandler.grid.x * 128 + 32, MouseHandler.grid.y * 128 + 32, 64, 64);
                 }
             }
         }

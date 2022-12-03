@@ -2,11 +2,13 @@ package com.game;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 public abstract class Ship {
-    private Vector2 location;
+    protected Vector2 location;
     private Vector2 afterimage;
     protected Vector2 attack;
-    private int direction;
+    protected int direction;
     private int afterimageDirection;
     private String status;
     private int maxHp;
@@ -37,7 +39,7 @@ public abstract class Ship {
 
     public abstract void attack(Vector2 location);
 
-    public abstract Vector2[] generateAttacks();
+    public abstract ArrayList<Vector2> generateAttacks();
 
     public Vector2 getLocation() {
         return location;
