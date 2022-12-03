@@ -9,92 +9,69 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class ShipManager {
-    private Texture destroyer;
+    private Texture shipTextures;
     private Texture target;
     private Texture red;
     private Texture arrow;
     private Texture hp;
-    private Texture missileShip;
     private SpriteBatch batch;
-    private ArrayList<Ship> player1Ships = new ArrayList<>();
-    private ArrayList<Ship> player2Ships = new ArrayList<>();
+    private ArrayList<Ship> ships = new ArrayList<>();
     private Ship selectedShip;
 
     public ShipManager() {
         create();
-        player1Ships.add(new Destroyer(new Vector2(5, 4), 2));
-        player1Ships.add(new Destroyer(new Vector2(7, 8), 3));
-        player2Ships.add(new Destroyer(new Vector2(8, 4), 6));
+        ships.add(new Destroyer(new Vector2(4, 4), 2, 0));
+        ships.add(new Destroyer(new Vector2(4, 5), 3, 0));
+        ships.add(new MissileShip(new Vector2(5, 4), 6, 1));
+        ships.add(new MissileShip(new Vector2(5, 5), 7, 1));
     }
 
     public void create() {
         batch = new SpriteBatch();
-        missileShip = new Texture(Gdx.files.internal("sprites/MissileShip.png"));
-        destroyer = new Texture("sprites/Destroyer.png");
+        shipTextures = new Texture(Gdx.files.internal("sprites/Ships.png"));
         target = new Texture("sprites/Target.png");
         red = new Texture("sprites/Red.png");
         arrow = new Texture("sprites/Arrow.png");
         hp = new Texture("sprites/hp.png");
     }
 
-    public ArrayList<Ship> getPlayer1Ships() {
-        return player1Ships;
-    }
-
-    public ArrayList<Ship> getPlayer2Ships() {
-        return player2Ships;
+    public ArrayList<Ship> getShips() {
+        return ships;
     }
 
     public void render() {
         DynamicCamera.get().update();
         batch.setProjectionMatrix(DynamicCamera.get().combined);
         batch.begin();
-        batch.draw(missileShip, 3 * 128, 6 * 128, 128, 128, (float)2/8, 0.5f, (float)3/8, 0);
-        if (GameScreen.getGameStatus() == 1) {
-            for (Ship ship : player2Ships) {
-                if (ship.getAfterimage() == null) {
-                    batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 1, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f);
-                    batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 1, (float) 1/3 * ship.getHp(), 0.5f);
-                } else {
-                    batch.draw(destroyer, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128, 128, 128, (float) 1 / 8 * ship.getAfterimageDirection(), 1, (float) 1 / 8 * (ship.getAfterimageDirection() + 1), 0.5f);
-                    batch.draw(hp, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 1, (float) 1/3 * ship.getHp(), 0.5f);
 
-                }
-            }
-            for (Ship ship : player1Ships) {
+        // Draw all ships
+        for (Ship ship : ships) {
+
+            // Your Ships
+            if (ship.player == GameScreen.getGameStatus() - 1) {
                 if (ship.getAfterimage() != null) {
                     batch.draw(arrow, (ship.getAfterimage().x - 1) * 128, (ship.getAfterimage().y - 1) * 128, 384, 384, (float) 1/8 * (ship.getDirection()), 1, (float) 1/8 * (ship.getDirection() + 1), 0);
                     if (ship.getAttack() != null) {
                         batch.draw(target, ship.getAttack().x * 128 + 32, ship.getAttack().y * 128 + 32, 64, 64);
                     }
                 }
-                batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.5f, (float) 1 / 8 * (ship.getDirection() + 1), 0);
+                batch.draw(shipTextures, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.25f + 0.5f * ship.spriteID, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f * ship.spriteID);
                 batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 0.5f, (float) 1/3 * ship.getHp(), 0);
-
             }
-        } else {
-            for (Ship ship : player1Ships) {
+
+            // Enemy Ships
+            else {
                 if (ship.getAfterimage() == null) {
-                    batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.5f, (float) 1 / 8 * (ship.getDirection() + 1), 0);
-                    batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1 / 3 * (ship.getHp() - 1), 0.5f, (float) 1 / 3 * ship.getHp(), 0);
+                    batch.draw(shipTextures, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 0.5f + 0.5f * ship.spriteID, (float) 1 / 8 * (ship.getDirection() + 1), 0.25f + 0.5f * ship.spriteID);
+                    batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1 / 3 * (ship.getHp() - 1), 1, (float) 1 / 3 * ship.getHp(), 0.5f);
                 } else {
-                    batch.draw(destroyer, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128, 128, 128, (float) 1 / 8 * ship.getAfterimageDirection(), 0.5f, (float) 1 / 8 * (ship.getAfterimageDirection() + 1), 0);
-                    batch.draw(hp, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 0.5f, (float) 1/3 * ship.getHp(), 0);
+                    batch.draw(shipTextures, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128, 128, 128, (float) 1 / 8 * ship.getAfterimageDirection(), 0.5f + 0.5f * ship.spriteID, (float) 1 / 8 * (ship.getAfterimageDirection() + 1), 0.25f + 0.5f * ship.spriteID);
+                    batch.draw(hp, ship.getAfterimage().x * 128, ship.getAfterimage().y * 128 + 96, 128, 32, (float) 1 / 3 * (ship.getHp() - 1), 1, (float) 1 / 3 * ship.getHp(), 0.5f);
                 }
-            }
-            for (Ship ship : player2Ships) {
-                if (ship.getAfterimage() != null) {
-                    batch.draw(arrow, (ship.getAfterimage().x - 1) * 128, (ship.getAfterimage().y - 1) * 128, 384, 384, (float) 1/8 * (ship.getDirection()), 1, (float) 1/8 * (ship.getDirection() + 1), 0);
-                    if (ship.getAttack() != null) {
-                        batch.draw(target, ship.getAttack().x * 128 + 32, ship.getAttack().y * 128 + 32, 64, 64);
-                    }
-                }
-                batch.draw(destroyer, ship.getLocation().x * 128, ship.getLocation().y * 128, 128, 128, (float) 1 / 8 * ship.getDirection(), 1, (float) 1 / 8 * (ship.getDirection() + 1), 0.5f);
-                batch.draw(hp, ship.getLocation().x * 128, ship.getLocation().y * 128 + 96, 128, 32, (float) 1/3 * (ship.getHp() - 1), 1, (float) 1/3 * ship.getHp(), 0.5f);
-
             }
         }
 
+        // Draw move and attack options
         if (selectedShip != null) {
             if (selectedShip.getStatus().equals("move")) {
                 for (Vector2 location : selectedShip.generateMoves()) {
@@ -112,77 +89,59 @@ public class ShipManager {
                 }
             }
         }
+        batch.end();
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
             updateSelected();
-
-        batch.end();
     }
 
     public void updateSelected() {
+        // No ship selected
         if (selectedShip == null || selectedShip.getStatus().equals("complete")) {
-            if (GameScreen.getGameStatus() == 1) {
-                for (Ship ship : player1Ships) {
-                    if (ship.getLocation().equals(MouseHandler.grid)) {
-                        selectedShip = ship;
-                        return;
-                    }
-                }
-            } else {
-                for (Ship ship : player2Ships) {
-                    if (ship.getLocation().equals(MouseHandler.grid)) {
-                        selectedShip = ship;
-                        return;
-                    }
+            for (Ship ship : ships) {
+                if (ship.getLocation().equals(MouseHandler.grid) && ship.player == GameScreen.getGameStatus() - 1) {
+                    selectedShip = ship;
+                    return;
                 }
             }
-        } else if (selectedShip.getStatus().equals("move")){
-            // Select another
-            if (GameScreen.getGameStatus() == 1) {
-                for (Ship ship : player1Ships) {
-                    if (ship.getLocation().equals(MouseHandler.grid) && !selectedShip.equals(ship)) {
-                        selectedShip = ship;
-                        return;
-                    }
-                }
-            } else {
-                for (Ship ship : player2Ships) {
-                    if (ship.getLocation().equals(MouseHandler.grid) && !selectedShip.equals(ship)) {
-                        selectedShip = ship;
-                        return;
-                    }
+        }
+
+        // Selected ship in move stage
+        else if (selectedShip.getStatus().equals("move")) {
+            // Select another ship
+            for (Ship ship : ships) {
+                if (ship.getLocation().equals(MouseHandler.grid) && ship.player == GameScreen.getGameStatus() - 1) {
+                    selectedShip = ship;
+                    return;
                 }
             }
-            // Select move option
+
+            // Select move location
             int directionIndex = -1;
             for (Vector2 location : selectedShip.generateMoves()) {
                 if (location.equals(MouseHandler.grid)) {
                     selectedShip.move(location, directionIndex);
                     selectedShip.setStatus("attack");
                     return;
-                } directionIndex++;
+                }
+                directionIndex++;
             }
-            // Other options
+
+            // Click out
             this.selectedShip = null;
-        } else if (selectedShip.getStatus().equals("attack")) {
-            // Select another
-            if (GameScreen.getGameStatus() == 1) {
-                for (Ship ship : player1Ships) {
-                    if (ship.getLocation().equals(MouseHandler.grid) && !selectedShip.equals(ship)) {
-                        selectedShip = ship;
-                        System.out.println("returned");
-                        return;
-                    }
-                }
-            } else {
-                for (Ship ship : player2Ships) {
-                    if (ship.getLocation().equals(MouseHandler.grid) && !selectedShip.equals(ship)) {
-                        selectedShip = ship;
-                        return;
-                    }
+        }
+
+        // Selected ship in attack stage
+        else if (selectedShip.getStatus().equals("attack")) {
+            // Select another ship
+            for (Ship ship : ships) {
+                if (ship.getLocation().equals(MouseHandler.grid) && ship.player == GameScreen.getGameStatus() - 1) {
+                    selectedShip = ship;
+                    return;
                 }
             }
-            // Select attack option
+
+            // Select attack location
             if (MouseHandler.grid.x >= selectedShip.getLocation().x - 2 && MouseHandler.grid.x <= selectedShip.getLocation().x + 2 &&
                 MouseHandler.grid.y >= selectedShip.getLocation().y - 2 && MouseHandler.grid.y <= selectedShip.getLocation().y + 2 &&
                     (MouseHandler.grid.x != selectedShip.getLocation().x || MouseHandler.grid.y != selectedShip.getLocation().y)) {
@@ -190,24 +149,17 @@ public class ShipManager {
                 selectedShip.attack(new Vector2(MouseHandler.grid.x, MouseHandler.grid.y));
                 return;
             }
-            // Other options
+
+            // Click out
             this.selectedShip = null;
         }
-
-
-//        if (selectedShip.getStatus().equals("move")) {
-//            selectedShip.move();
-//        }
-
-
     }
 
     public void dispose() {
         batch.dispose();
-        destroyer.dispose();
         target.dispose();
         red.dispose();
-        missileShip.dispose();
+        shipTextures.dispose();
     }
 
     public void setSelectedShip(Ship selectedShip) {

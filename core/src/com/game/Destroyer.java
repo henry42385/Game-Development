@@ -3,8 +3,9 @@ package com.game;
 import com.badlogic.gdx.math.Vector2;
 
 public class Destroyer extends Ship{
-    public Destroyer(Vector2 location, int direction) {
-        super(location, direction, 3);
+
+    public Destroyer(Vector2 location, int direction, int player) {
+        super(location, direction, 3, player, 1);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -25,7 +24,7 @@ public class GameScreen extends Screen {
         player2
         end
      */
-    private static int gameStatus = 0;
+    private static int gameStatus = 1;
     /*  start
         replay
         play
@@ -41,83 +40,24 @@ public class GameScreen extends Screen {
         replayManager = new ReplayManager();
         rm = new ResourceManager();
         hudManager = new HudManager();
-
-        Gdx.input.setInputProcessor(new InputAdapter() {
-
-            @Override public boolean keyUp (int keycode) {
-                if (keycode == Input.Keys.SPACE) {
-                    switch (gameStatus) {
-                        case 0:
-                            gameStatus = 1;
-                            break;
-                        case 1:
-                            switch (turnStatus) {
-                                case "start":
-                                    shipManager.setSelectedShip(null);
-                                    if (turn == 0) {
-                                        turnStatus = "play";
-                                    } else {
-                                        turnStatus = "replay";
-                                        startTime = TimeUtils.millis();
-                                    }
-                                    break;
-                                case "play":
-                                    turnStatus = "start";
-                                    gameStatus = 2;
-                            }
-                            break;
-                        case 2:
-                            switch (turnStatus) {
-                                case "start":
-                                    shipManager.setSelectedShip(null);
-                                    if (turn == 0) {
-                                        turnStatus = "play";
-                                    } else {
-                                        turnStatus = "replay";
-                                        startTime = TimeUtils.millis();
-                                    }
-                                    break;
-                                case "play":
-                                    turnStatus = "start";
-                                    gameStatus = 1;
-                                    playTurn();
-                            }
-                            break;
-                    }
-                }
-                return true;
-            }
-        });
     }
 
     public void playTurn() {
-        replayManager.setReplay(shipManager.getPlayer1Ships(), shipManager.getPlayer2Ships());
-        for (Ship ship : shipManager.getPlayer1Ships()) {
+        // Create turn replay
+        replayManager.setReplay(shipManager.getShips());
+
+        // Update ship hp
+        for (Ship ship : shipManager.getShips()) {
             if (ship.getAttack() != null) {
-                for (Ship shipEnemy : shipManager.getPlayer2Ships()) {
-                    if (shipEnemy.getLocation().equals(ship.getAttack()))
-                        shipEnemy.takeDamage();
-                }
-            }
-        } for (Ship ship : shipManager.getPlayer2Ships()) {
-            if (ship.getAttack() != null) {
-                for (Ship shipEnemy : shipManager.getPlayer1Ships()) {
-                    if (shipEnemy.getLocation().equals(ship.getAttack()))
-                        shipEnemy.takeDamage();
+                for (Ship targetShip : shipManager.getShips()) {
+                    if (targetShip.getLocation().equals(ship.getAttack()))
+                        targetShip.takeDamage();
                 }
             }
         }
 
-        Iterator<Ship> itr = shipManager.getPlayer1Ships().iterator();
-        while (itr.hasNext()) {
-            Ship ship = itr.next();
-            if (ship.getHp() == 0) {
-                itr.remove();
-            } else {
-                ship.play();
-            }
-        }
-        itr = shipManager.getPlayer2Ships().iterator();
+        // Remove 0 hp ships
+        Iterator<Ship> itr = shipManager.getShips().iterator();
         while (itr.hasNext()) {
             Ship ship = itr.next();
             if (ship.getHp() == 0) {
@@ -127,19 +67,29 @@ public class GameScreen extends Screen {
             }
         }
 
-        if (shipManager.getPlayer1Ships().size() == 0 && shipManager.getPlayer2Ships().size() == 0) {
+        // Check winner
+        int p1Count = 0;
+        int p2Count = 0;
+        for (Ship ship : shipManager.getShips()) {
+            if (ship.player == 0)
+                p1Count++;
+            else
+                p2Count++;
+        }
+
+
+        if (p1Count == 0 && p2Count == 0) {
             winner = "Draw";
             gameStatus = 3;
-        } else if (shipManager.getPlayer1Ships().size() == 0) {
+        } else if (p1Count == 0) {
             winner = "Player 1 wins";
             gameStatus = 3;
-        } else if (shipManager.getPlayer2Ships().size() == 0) {
+        } else if (p2Count == 0) {
             winner = "Player 2 wins";
             gameStatus = 3;
         }
 
         turn++;
-        System.out.println(turn);
     }
 
     public void render() {

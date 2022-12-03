@@ -66,22 +66,8 @@ public class MapManager {
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 boolean vision = false;
-                if (player == 0) {
-
-                } else if (player == 1) {
-                    for (Ship ship : sm.getPlayer1Ships()) {
-                        if (ship.getAfterimage() == null) {
-                            if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
-                                    y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)
-                                vision = true;
-                        } else {
-                            if (x <= ship.getAfterimage().x + 3 && x >= ship.getAfterimage().x - 3 &&
-                                    y <= map.getHeight() - ship.getAfterimage().y + 2 && y >= map.getHeight() - ship.getAfterimage().y - 4)
-                                vision = true;
-                        }
-                    }
-                } else {
-                    for (Ship ship : sm.getPlayer2Ships()) {
+                for (Ship ship : sm.getShips()) {
+                    if (ship.player == player - 1) {
                         if (ship.getAfterimage() == null) {
                             if (x <= ship.getLocation().x + 3 && x >= ship.getLocation().x - 3 &&
                                     y <= map.getHeight() - ship.getLocation().y + 2 && y >= map.getHeight() - ship.getLocation().y - 4)

@@ -11,13 +11,17 @@ public abstract class Ship {
     private String status;
     private int maxHp;
     private int currentHp;
+    public int player;
+    public int spriteID;
 
-    public Ship(Vector2 location, int direction, int maxHp) {
+    public Ship(Vector2 location, int direction, int maxHp, int player, int spriteID) {
         this.location = location;
         this.direction = direction;
         this.status = "move";
         this.maxHp = maxHp;
         this.currentHp = maxHp;
+        this.player = player;
+        this.spriteID = spriteID;
     }
 
     public void move(Vector2 newLocation, int moveDirection) {
@@ -32,6 +36,8 @@ public abstract class Ship {
     }
 
     public abstract void attack(Vector2 location);
+
+    public abstract Vector2[] generateAttacks();
 
     public Vector2 getLocation() {
         return location;

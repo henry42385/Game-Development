@@ -30,27 +30,19 @@ public class ReplayManager {
         batch = new SpriteBatch();
     }
 
-    public void setReplay(ArrayList<Ship> team1Ships, ArrayList<Ship> team2Ships) {
+    public void setReplay(ArrayList<Ship> ships) {
         moves = new ArrayList<>();
         attacks = new ArrayList<>();
 
-        for (Ship ship : team1Ships) {
+        for (Ship ship : ships) {
+            // Ship movements
             if (ship.getAfterimage() != null) {
-                moves.add(new MoveReplay(ship.getAfterimage().cpy(), ship.getLocation().cpy(), ship.getAfterimageDirection(),ship.getDirection(), 1, ship.getHp()));
+                moves.add(new MoveReplay(ship.getAfterimage().cpy(), ship.getLocation().cpy(), ship.getAfterimageDirection(), ship.getDirection(), ship.player + 1, ship.getHp()));
             } else {
-                moves.add(new MoveReplay(ship.getLocation().cpy(), ship.getLocation().cpy(), ship.getDirection(), ship.getDirection(), 1, ship.getHp()));
+                moves.add(new MoveReplay(ship.getLocation().cpy(), ship.getLocation().cpy(), ship.getDirection(), ship.getDirection(), ship.player + 1, ship.getHp()));
             }
-        } for (Ship ship : team2Ships) {
-            if (ship.getAfterimage() != null) {
-                moves.add(new MoveReplay(ship.getAfterimage().cpy(), ship.getLocation().cpy(), ship.getAfterimageDirection(), ship.getDirection(), 2, ship.getHp()));
-            } else {
-                moves.add(new MoveReplay(ship.getLocation().cpy(), ship.getLocation().cpy(), ship.getDirection(), ship.getDirection(), 2, ship.getHp()));
-            }
-        } for (Ship ship : team1Ships) {
-            if (ship.getAttack() != null) {
-                attacks.add(new AttackReplay(ship.getLocation().cpy(), ship.getAttack().cpy()));
-            }
-        } for (Ship ship : team2Ships) {
+
+            // Ship attacks
             if (ship.getAttack() != null) {
                 attacks.add(new AttackReplay(ship.getLocation().cpy(), ship.getAttack().cpy()));
             }
