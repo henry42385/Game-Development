@@ -80,8 +80,26 @@ public class ShipManager {
             } else if (selectedShip.getStatus().equals("attack")) {
                 for (Vector2 location : selectedShip.generateAttacks()) {
                     batch.draw(red, location.x * 128, location.y * 128, 128, 128);
-                    if (MouseHandler.grid.equals(location) && !MouseHandler.grid.equals(selectedShip.getLocation()))
+
+                    // Destroyer options
+                    if (MouseHandler.grid.equals(location) && !MouseHandler.grid.equals(selectedShip.getLocation()) && selectedShip instanceof Destroyer) {
                         batch.draw(target, MouseHandler.grid.x * 128 + 32, MouseHandler.grid.y * 128 + 32, 64, 64);
+                    }
+
+                    // Missile ship options
+                    else if (MouseHandler.grid.equals(location) && !MouseHandler.grid.equals(selectedShip.getLocation()) && selectedShip instanceof MissileShip) {
+                        batch.draw(target, MouseHandler.grid.x * 128 + 32, MouseHandler.grid.y * 128 + 32, 64, 64);
+                        Vector2 extraTarget = new Vector2();
+                        if (Math.abs(MouseHandler.grid.x - selectedShip.location.x) == 2 || Math.abs(MouseHandler.grid.y - selectedShip.location.y) == 2) {
+                            extraTarget = location.add(selectedShip.location).scl(0.5f);
+                        } else if (Math.abs(MouseHandler.grid.x - selectedShip.location.x) == 1 || Math.abs(MouseHandler.grid.y - selectedShip.location.y) == 1) {
+                            extraTarget.x = location.x - selectedShip.location.x + location.x;
+                            extraTarget.y = location.y - selectedShip.location.y + location.y;
+                        }
+                        batch.draw(target, extraTarget.x * 128 + 32, extraTarget.y * 128 + 32, 64, 64);
+
+                    }
+
                 }
             }
         }
