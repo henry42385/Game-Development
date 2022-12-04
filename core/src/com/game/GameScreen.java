@@ -3,6 +3,7 @@ package com.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -49,9 +50,22 @@ public class GameScreen extends Screen {
         // Update ship hp
         for (Ship ship : shipManager.getShips()) {
             if (ship.getAttack() != null) {
+                // Prepare damage zones
+                Vector2 extraTarget = new Vector2();
+                if (ship instanceof MissileShip) {
+                    if (Math.abs(ship.attack.x - ship.location.x) == 2 || Math.abs(ship.attack.y - ship.location.y) == 2) {
+                        extraTarget = ship.attack.cpy().add(ship.location.cpy()).scl(0.5f);
+                    } else if (Math.abs(ship.attack.x - ship.location.x) == 1 || Math.abs(ship.attack.y - ship.location.y) == 1) {
+                        extraTarget.x = ship.attack.x - ship.location.x + ship.attack.x;
+                        extraTarget.y = ship.attack.y - ship.location.y + ship.attack.y;
+                    }
+                } else {
+                    extraTarget = ship.getAttack();
+                }
+
                 for (Ship targetShip : shipManager.getShips()) {
-                    if (targetShip.getLocation().equals(ship.getAttack()))
-                        targetShip.takeDamage();
+                    if (targetShip.getLocation().equals(ship.getAttack()) || targetShip.getLocation().equals(extraTarget))
+                            targetShip.takeDamage();
                 }
             }
         }
@@ -88,7 +102,6 @@ public class GameScreen extends Screen {
             winner = "Player 2 wins";
             gameStatus = 3;
         }
-
         turn++;
     }
 

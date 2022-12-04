@@ -12,7 +12,7 @@ public class MissileShip extends Ship {
 
     @Override
     public void attack(Vector2 location) {
-
+        this.attack = location;
     }
 
     @Override

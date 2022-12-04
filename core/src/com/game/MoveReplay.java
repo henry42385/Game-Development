@@ -9,13 +9,15 @@ public class MoveReplay {
     public int endDirection;
     public int team;
     public int hp;
+    public int spriteID;
 
-    public MoveReplay(Vector2 start, Vector2 end, int startDirection, int endDirection, int team, int hp) {
+    public MoveReplay(Vector2 start, Vector2 end, int startDirection, int endDirection, int team, int hp, int spriteID) {
         this.start = start;
         this.end = end;
         this.startDirection = startDirection;
         this.endDirection = endDirection;
         this.team = team;
         this.hp = hp;
+        this.spriteID = spriteID;
     }
 }
