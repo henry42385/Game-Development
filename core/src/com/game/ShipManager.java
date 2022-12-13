@@ -20,7 +20,7 @@ public class ShipManager {
 
     public ShipManager() {
         create();
-        ships.add(new MissileShip(new Vector2(6, 6), 2, 0));
+        ships.add(new MissileShip(new Vector2(3, 3), 5, 0));
         ships.add(new Destroyer(new Vector2(4, 4), 3, 0));
         ships.add(new Destroyer(new Vector2(10, 4), 6, 1));
         ships.add(new MissileShip(new Vector2(10, 5), 7, 1));

@@ -68,6 +68,9 @@ public class GameScreen extends Screen {
                             targetShip.takeDamage();
                 }
             }
+            if (ship.getLocation().x < mapManager.dangerX1 || ship.getLocation().x > mapManager.dangerX2 || ship.getLocation().y < mapManager.dangerY1 || ship.getLocation().y > mapManager.dangerY2) {
+                ship.takeDamage();
+            }
         }
 
         // Remove 0 hp ships
@@ -91,7 +94,6 @@ public class GameScreen extends Screen {
                 p2Count++;
         }
 
-
         if (p1Count == 0 && p2Count == 0) {
             winner = "Draw";
             gameStatus = 3;
@@ -102,7 +104,15 @@ public class GameScreen extends Screen {
             winner = "Player 2 wins";
             gameStatus = 3;
         }
+
+
         turn++;
+        if (turn % 3 == 0) {
+            mapManager.dangerX1++;
+            mapManager.dangerX2--;
+            mapManager.dangerY1++;
+            mapManager.dangerY2--;
+        }
     }
 
     public void render() {
@@ -118,6 +128,7 @@ public class GameScreen extends Screen {
                     mapManager.renderMap();
                     mapManager.renderFog(0, shipManager);
                     mapManager.renderGrid();
+                    mapManager.renderBorder();
                     renderStart();
                     break;
                 case "replay":
@@ -129,6 +140,7 @@ public class GameScreen extends Screen {
                         replayManager.render(gameStatus, mapManager, elapsedTime);
                         mapManager.renderFog(gameStatus, shipManager);
                         mapManager.renderGrid();
+                        mapManager.renderBorder();
                         break;
                     }
                 case "play":
@@ -136,10 +148,12 @@ public class GameScreen extends Screen {
                     shipManager.render();
                     mapManager.renderFog(gameStatus, shipManager);
                     mapManager.renderGrid();
+                    mapManager.renderBorder();
             }
         } else if (gameStatus == 3) {
             mapManager.renderMap();
             mapManager.renderGrid();
+            mapManager.renderBorder();
             shipManager.render();
         }
         renderHUD();

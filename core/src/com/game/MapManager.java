@@ -5,25 +5,37 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import javax.xml.soap.Text;
+
 public class MapManager {
     private Texture spriteSheet;
     private Map map;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
+    private Texture danger;
+    public int dangerX1;
+    public int dangerX2;
+    public int dangerY1;
+    public int dangerY2;
 
     public MapManager() {
         create();
     }
 
     public void create() {
-        loadMap("assets/maps/map1.txt");
+        loadMap("maps/map2.txt");
         this.batch = new SpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
         this.spriteSheet = new Texture("sprites/TerrainSpritesheet2.png");
+        this.danger = new Texture("sprites/danger.png");
     }
 
     public void loadMap(String path) {
-        this.map = new Map("maps/map1.txt");
+        this.map = new Map(path);
+        dangerX1 = 2;
+        dangerX2 = map.getWidth() - 3;
+        dangerY1 = 2;
+        dangerY2 = map.getHeight() - 3;
     }
 
     public void renderMap() {
@@ -51,11 +63,11 @@ public class MapManager {
         shapeRenderer.setProjectionMatrix(DynamicCamera.get().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0, 0, 0, 1);
-        for (int i = 1; i < map.getHeight() - 2; i++) {
-            shapeRenderer.line(256, 128 + i * 128, map.getWidth() * 128 - 256, 128 + i * 128);
+        for (int i = -1; i < map.getHeight(); i++) {
+            shapeRenderer.line(0, 128 + i * 128, map.getWidth() * 128, 128 + i * 128);
         }
-        for (int i = 1; i < map.getWidth() - 2; i++) {
-            shapeRenderer.line(128 + i * 128, 256, 128 + i * 128, map.getHeight() * 128 - 256);
+        for (int i = -1; i < map.getWidth(); i++) {
+            shapeRenderer.line(128 + i * 128, 0, 128 + i * 128, map.getHeight() * 128);
         }
         shapeRenderer.end();
     }
@@ -94,9 +106,22 @@ public class MapManager {
         batch.end();
     }
 
+    public void renderBorder() {
+        batch.begin();
+        for (int i = 0; i < map.getWidth(); i++) {
+            for (int j = 0; j < map.getHeight(); j++) {
+                if (i < dangerX1 || i > dangerX2 || j < dangerY1 || j > dangerY2) {
+                    batch.draw(danger, i * 128, j * 128, 128, 128);
+                }
+            }
+        }
+        batch.end();
+    }
+
     public void dispose() {
         spriteSheet.dispose();
         batch.dispose();
         shapeRenderer.dispose();
+        danger.dispose();
     }
 }
